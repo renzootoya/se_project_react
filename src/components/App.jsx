@@ -1,29 +1,28 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CurrentUserProvider, CurrentUserContext } from '../contexts/CurrentUserContext';
-import Header from './Header';
+import Header from './Header.jsx';
 import Main from './Main';
 import Footer from './Footer';
 import SideBar from './SideBar';
-import Profile from '../pages/Profile';
+import Profile from '../pages/Profile.jsx';
 import ProtectedRoute from './ProtectedRoute';
 import AddItemModal from './AddItemModal';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
 import * as auth from '../utils/auth';
 import * as api from '../utils/api';
-import './App.css';
 
 function AppContent() {
   const {
-    setCurrentUser: setContextUser,
-    setIsLoggedIn: setContextLoggedIn,
+    currentUser,
+    setCurrentUser,
+    isLoggedIn,
+    setIsLoggedIn,
     setLoading: setContextLoading,
     setError: setContextError
   } = useContext(CurrentUserContext);
 
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAddItemModal, setShowAddItemModal] = useState(false);
@@ -41,26 +40,22 @@ function AppContent() {
           const response = await auth.checkToken(token);
           if (response.user) {
             setCurrentUser(response.user);
-            setContextUser(response.user);
             setIsLoggedIn(true);
-            setContextLoggedIn(true);
           } else {
             localStorage.removeItem('jwt');
             setIsLoggedIn(false);
-            setContextLoggedIn(false);
           }
         } catch (error) {
           console.error('Token validation failed:', error);
           localStorage.removeItem('jwt');
           setIsLoggedIn(false);
-          setContextLoggedIn(false);
         }
       }
       setIsInitializing(false);
     };
 
     initializeAuth();
-  }, [setContextUser, setContextLoggedIn]);
+  }, [setCurrentUser, setIsLoggedIn]);
 
   const handleRegister = async (name, avatar, email, password) => {
     try {
@@ -70,9 +65,7 @@ function AppContent() {
         const userResponse = await auth.checkToken(response.token);
         if (userResponse.user) {
           setCurrentUser(userResponse.user);
-          setContextUser(userResponse.user);
           setIsLoggedIn(true);
-          setContextLoggedIn(true);
           setShowRegisterModal(false);
         }
       }
@@ -90,9 +83,7 @@ function AppContent() {
         const userResponse = await auth.checkToken(response.token);
         if (userResponse.user) {
           setCurrentUser(userResponse.user);
-          setContextUser(userResponse.user);
           setIsLoggedIn(true);
-          setContextLoggedIn(true);
           setShowLoginModal(false);
         }
       }
@@ -105,9 +96,7 @@ function AppContent() {
   const handleLogout = () => {
     localStorage.removeItem('jwt');
     setIsLoggedIn(false);
-    setContextLoggedIn(false);
     setCurrentUser(null);
-    setContextUser(null);
   };
 
   const handleCardLike = async ({ id, isLiked }) => {
@@ -138,10 +127,7 @@ function AppContent() {
 
   const handleDeleteClothing = async (id) => {
     try {
-      const token = localStorage.getItem('jwt');
-      if (!token) throw new Error('No authentication token');
-
-      await api.clothingAPI.deleteCard(id, token);
+      await api.clothingAPI.deleteClothing(id);
       setClothingItems((items) => items.filter(item => item._id !== id));
     } catch (err) {
       console.error('Failed to delete clothing:', err);
@@ -156,7 +142,8 @@ function AppContent() {
         itemData.imageUrl,
         itemData.weather
       );
-      setClothingItems((items) => [...items, response.data]);
+      const newItem = response.data?.data || response.data;
+      setClothingItems((items) => [...items, newItem]);
       setShowAddItemModal(false);
     } catch (err) {
       console.error('Failed to add item:', err);
@@ -166,7 +153,6 @@ function AppContent() {
 
   const handleUpdateProfile = (updatedUser) => {
     setCurrentUser(updatedUser);
-    setContextUser(updatedUser);
   };
 
   if (isInitializing) {
@@ -217,6 +203,7 @@ function AppContent() {
                 clothingItems={clothingItems}
                 onCardLike={handleCardLike}
                 isLoggedIn={isLoggedIn}
+                onDeleteClothing={handleDeleteClothing}
               />
             </ProtectedRoute>
           }

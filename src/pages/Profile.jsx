@@ -4,7 +4,7 @@ import SideBar from '../components/SideBar';
 import ClothesSection from '../components/ClothesSection';
 import './Profile.css';
 
-const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLoggedIn }) => {
+const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLoggedIn, onDeleteClothing }) => {
   const contextUser = useContext(CurrentUserContext);
   const user = currentUser || contextUser?.currentUser;
   
@@ -61,7 +61,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/users/me`, {
+      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/auth/me`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -203,6 +203,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
         onCardLike={onCardLike} 
         isLoggedIn={isLoggedIn} 
         currentUser={user}
+        onDelete={onDeleteClothing}
       />
     </div>
   );

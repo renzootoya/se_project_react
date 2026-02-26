@@ -9,7 +9,7 @@ const generateToken = (id) => {
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, avatar, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'Email already in use' });
     }
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, avatar, email, password });
     await user.save();
 
     const token = generateToken(user._id);

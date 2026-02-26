@@ -1,12 +1,14 @@
 import React, { createContext, useState, useCallback } from 'react';
 
 export const CurrentUserContext = createContext();
+export const TemperatureUnitContext = createContext();
 
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [temperatureUnit, setTemperatureUnit] = useState('F');
 
   const updateUser = useCallback((user) => {
     setCurrentUser(user);
@@ -31,7 +33,9 @@ export const CurrentUserProvider = ({ children }) => {
     setLoading,
     setError,
     updateUser,
-    logout
+    logout,
+    temperatureUnit,
+    setTemperatureUnit
   };
 
   return (

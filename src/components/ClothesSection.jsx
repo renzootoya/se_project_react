@@ -2,7 +2,7 @@ import React from 'react';
 import ItemCard from './ItemCard';
 import './ClothesSection.css';
 
-const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, currentUser }) => {
+const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, currentUser, onDelete }) => {
   const userClothes = clothingItems.filter(item => 
     item.owner === currentUser?._id
   );
@@ -27,6 +27,7 @@ const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, currentUser }) 
             onCardLike={onCardLike}
             isLoggedIn={isLoggedIn}
             currentUser={currentUser}
+            onDelete={onDelete}
           />
         ))}
       </div>

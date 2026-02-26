@@ -6,7 +6,6 @@ import './Main.css';
 
 const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike, onDeleteClothing }) => {
   const weatherTypes = ['Hot', 'Warm', 'Cool', 'Cold'];
-  const [clothing, setClothing] = useState(clothingItems || []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -14,15 +13,11 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
     fetchClothing();
   }, []);
 
-  useEffect(() => {
-    setClothingItems(clothing);
-  }, [clothing, setClothingItems]);
-
   const fetchClothing = async () => {
     try {
       const response = await clothingAPI.getClothing();
-      const items = response.data?.clothing || response.clothing || [];
-      setClothing(items);
+      const items = response.data?.data || response.data || [];
+      setClothingItems(items);
     } catch (err) {
       setError('Failed to load clothing items');
       console.error(err);
@@ -34,7 +29,6 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
   const handleDelete = async (itemId) => {
     try {
       await onDeleteClothing(itemId);
-      setClothing((items) => items.filter(item => item._id !== itemId));
     } catch (err) {
       console.error('Failed to delete item:', err);
       throw err;
@@ -57,11 +51,11 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
         </div>
       </section>
 
-      {clothing.length === 0 ? (
+      {clothingItems.length === 0 ? (
         <p className="no-items">No clothing items available</p>
       ) : (
         <div className="clothing-grid">
-          {clothing.map(item => (
+          {clothingItems.map(item => (
             <ItemCard
               key={item._id}
               item={item}
