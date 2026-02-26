@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import SideBar from '../components/SideBar';
 import ClothesSection from '../components/ClothesSection';
 import './Profile.css';
 
 const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLoggedIn }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const contextUser = useContext(CurrentUserContext);
+  const user = currentUser || contextUser?.currentUser;
+  
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -14,11 +17,11 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
   const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
-    if (currentUser) {
-      setName(currentUser.name || '');
-      setAvatar(currentUser.avatar || '');
+    if (user) {
+      setName(user.name || '');
+      setAvatar(user.avatar || '');
     }
-  }, [currentUser]);
+  }, [user]);
 
   const validateForm = () => {
     const errors = {};
@@ -75,7 +78,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
       }
 
       setSuccess('Profile updated successfully!');
-      onUpdateProfile(data.user || { ...currentUser, name, avatar });
+      onUpdateProfile(data.user || { ...user, name, avatar });
       setTimeout(() => {
         setIsEditing(false);
       }, 1500);
@@ -87,21 +90,21 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
   };
 
   const handleCancel = () => {
-    setName(currentUser?.name || '');
-    setAvatar(currentUser?.avatar || '');
+    setName(user?.name || '');
+    setAvatar(user?.avatar || '');
     setIsEditing(false);
     setError('');
     setSuccess('');
     setValidationErrors({});
   };
 
-  if (!currentUser) {
+  if (!user) {
     return <div className="profile-container"><p>Loading profile...</p></div>;
   }
 
   return (
     <div className="profile-page">
-      <SideBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SideBar currentUser={user} />
       <div className="profile-container">
         <div className="profile-card">
           <div className="profile-header">
@@ -115,10 +118,10 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
           {!isEditing ? (
             <>
               <div className="profile-info">
-                {currentUser.avatar ? (
+                {user.avatar ? (
                   <img
-                    src={currentUser.avatar}
-                    alt={currentUser.name}
+                    src={user.avatar}
+                    alt={user.name}
                     className="avatar"
                     onError={(e) => {
                       e.target.style.display = 'none';
@@ -127,11 +130,11 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
                 ) : null}
                 <div className="info-group">
                   <label>Name</label>
-                  <p>{currentUser.name}</p>
+                  <p>{user.name}</p>
                 </div>
                 <div className="info-group">
                   <label>Email</label>
-                  <p>{currentUser.email}</p>
+                  <p>{user.email}</p>
                 </div>
               </div>
               <button
@@ -199,7 +202,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
         clothingItems={clothingItems} 
         onCardLike={onCardLike} 
         isLoggedIn={isLoggedIn} 
-        currentUser={currentUser}
+        currentUser={user}
       />
     </div>
   );
