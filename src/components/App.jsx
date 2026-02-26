@@ -214,6 +214,9 @@ function AppContent() {
               <Profile
                 currentUser={currentUser}
                 onUpdateProfile={handleUpdateProfile}
+                clothingItems={clothingItems}
+                onCardLike={handleCardLike}
+                isLoggedIn={isLoggedIn}
               />
             </ProtectedRoute>
           }

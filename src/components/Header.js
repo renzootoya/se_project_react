@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
+import ToggleSwitch from './ToggleSwitch';
 import './Header.css';
 
 const Header = ({
@@ -21,6 +22,7 @@ const Header = ({
 }) => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const getAvatarPlaceholder = () => {
     if (!currentUser?.name) return '?';
@@ -67,6 +69,14 @@ const Header = ({
                 >
                   + Add Item
                 </button>
+                <Link to="/profile" className="profile-link">
+                  Profile
+                </Link>
+                <ToggleSwitch 
+                  isOn={darkMode} 
+                  onChange={setDarkMode}
+                  label="🌙"
+                />
                 <div className="user-section">
                   {currentUser.avatar ? (
                     <img 

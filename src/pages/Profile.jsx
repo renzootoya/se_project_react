@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import SideBar from '../components/SideBar';
+import ClothesSection from '../components/ClothesSection';
 import './Profile.css';
 
-const Profile = ({ currentUser, onUpdateProfile }) => {
+const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLoggedIn }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -97,16 +100,18 @@ const Profile = ({ currentUser, onUpdateProfile }) => {
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <div className="profile-header">
-          <h1>My Profile</h1>
-        </div>
+    <div className="profile-page">
+      <SideBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="profile-container">
+        <div className="profile-card">
+          <div className="profile-header">
+            <h1>My Profile</h1>
+          </div>
 
-        {success && <div className="success-message">{success}</div>}
-        {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
+          {error && <div className="error-message">{error}</div>}
 
-        <div className="profile-content">
+          <div className="profile-content">
           {!isEditing ? (
             <>
               <div className="profile-info">
@@ -187,8 +192,15 @@ const Profile = ({ currentUser, onUpdateProfile }) => {
               </div>
             </form>
           )}
+          </div>
         </div>
       </div>
+      <ClothesSection 
+        clothingItems={clothingItems} 
+        onCardLike={onCardLike} 
+        isLoggedIn={isLoggedIn} 
+        currentUser={currentUser}
+      />
     </div>
   );
 };
