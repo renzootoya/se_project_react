@@ -272,6 +272,55 @@
   cursor: not-allowed;
 }
 
+.weather-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.weather-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.weather-checkbox:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.weather-checkbox input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.weather-checkbox input[type="checkbox"]:checked + label {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.login-required {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  font-size: 16px;
+}
+
+.weather-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #666;
+  text-transform: capitalize;
+}
+
 @media (max-width: 600px) {
   .item-modal-content {
     flex-direction: column;
@@ -290,5 +339,18 @@
   .delete-btn,
   .close-btn {
     width: 100%;
+  }
+
+  .modal-content {
+    padding: 30px 20px;
+  }
+
+  .weather-options {
+    gap: 8px;
+  }
+
+  .weather-checkbox {
+    padding: 6px 10px;
+    font-size: 14px;
   }
 }

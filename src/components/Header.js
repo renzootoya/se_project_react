@@ -10,12 +10,14 @@ const Header = ({
   onLogout,
   onShowRegister,
   onShowLogin,
+  onShowAddItem,
   showRegisterModal,
   setShowRegisterModal,
   showLoginModal,
   setShowLoginModal,
   onRegister,
-  onLogin
+  onLogin,
+  onToggleSidebar
 }) => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -45,12 +47,26 @@ const Header = ({
     <>
       <header className="header">
         <div className="header-container">
+          <button 
+            className="menu-toggle"
+            onClick={onToggleSidebar}
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
           <Link to="/" className="logo">
             WTWR
           </Link>
           <nav className="nav">
             {isLoggedIn && currentUser ? (
               <>
+                <button 
+                  onClick={onShowAddItem} 
+                  className="add-item-btn"
+                  disabled={isLoggingOut}
+                >
+                  + Add Item
+                </button>
                 <div className="user-section">
                   {currentUser.avatar ? (
                     <img 

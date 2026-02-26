@@ -135,3 +135,61 @@
   background-color: #28a745;
   color: white;
 }
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.menu-toggle:hover {
+  color: #007bff;
+}
+
+.add-item-btn {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.add-item-btn:hover {
+  background-color: #218838;
+}
+
+.add-item-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav {
+    gap: 12px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .edit-profile-btn,
+  .add-item-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
