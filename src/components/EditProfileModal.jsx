@@ -6,18 +6,48 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
   const [avatar, setAvatar] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && isOpen) {
       setName(currentUser.name || '');
       setAvatar(currentUser.avatar || '');
+      setError('');
+      setSuccess('');
+      setValidationErrors({});
     }
   }, [currentUser, isOpen]);
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!name.trim()) {
+      errors.name = 'Name is required';
+    } else if (name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+
+    if (avatar && !/^https?:\/\/.+/.test(avatar)) {
+      errors.avatar = 'Avatar must be a valid URL';
+    }
+
+    return errors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
+    setValidationErrors({});
     setLoading(true);
+
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setLoading(false);
+      return;
+    }
 
     try {
       const token = localStorage.getItem('jwt');
@@ -43,8 +73,11 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
         return;
       }
 
-      onUpdateProfile(name, avatar);
-      onClose();
+      setSuccess('Profile updated successfully!');
+      onUpdateProfile(data.user || { name, avatar });
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (err) {
       setError(err.message || 'Failed to update profile');
     } finally {
@@ -56,26 +89,29 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
     setName(currentUser?.name || '');
     setAvatar(currentUser?.avatar || '');
     setError('');
+    setSuccess('');
+    setValidationErrors({});
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={handleCancel}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>×</button>
+        <button className="modal-close" onClick={handleCancel}>×</button>
         <h2>Edit Profile</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Name</label>
+            <label>Name *</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
               placeholder="Enter your name"
+              disabled={loading}
             />
+            {validationErrors.name && <span className="field-error">{validationErrors.name}</span>}
           </div>
           <div className="form-group">
             <label>Avatar URL</label>
@@ -84,19 +120,29 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
               value={avatar}
               onChange={(e) => setAvatar(e.target.value)}
               placeholder="Enter avatar URL (optional)"
+              disabled={loading}
             />
+            {validationErrors.avatar && <span className="field-error">{validationErrors.avatar}</span>}
           </div>
           {avatar && (
             <div className="avatar-preview">
-              <img src={avatar} alt="Avatar Preview" className="preview-img" />
+              <img 
+                src={avatar} 
+                alt="Avatar Preview" 
+                className="preview-img"
+                onError={(e) => {
+                  e.target.alt = 'Invalid URL';
+                }}
+              />
             </div>
           )}
           {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
           <div className="form-actions">
             <button type="submit" disabled={loading} className="submit-btn">
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
-            <button type="button" onClick={handleCancel} className="cancel-btn">
+            <button type="button" onClick={handleCancel} disabled={loading} className="cancel-btn">
               Cancel
             </button>
           </div>

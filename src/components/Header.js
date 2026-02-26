@@ -18,6 +18,7 @@ const Header = ({
   onLogin
 }) => {
   const navigate = useNavigate();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const getAvatarPlaceholder = () => {
     if (!currentUser?.name) return '?';
@@ -28,6 +29,18 @@ const Header = ({
     navigate('/profile');
   };
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      onLogout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <>
       <header className="header">
@@ -36,23 +49,43 @@ const Header = ({
             WTWR
           </Link>
           <nav className="nav">
-            {isLoggedIn ? (
+            {isLoggedIn && currentUser ? (
               <>
                 <div className="user-section">
-                  {currentUser?.avatar ? (
-                    <img src={currentUser.avatar} alt="Avatar" className="avatar-img" />
-                  ) : (
-                    <div className="avatar-placeholder">
-                      {getAvatarPlaceholder()}
-                    </div>
-                  )}
-                  <span className="user-name">{currentUser?.name}</span>
+                  {currentUser.avatar ? (
+                    <img 
+                      src={currentUser.avatar} 
+                      alt={currentUser.name} 
+                      className="avatar-img"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="avatar-placeholder"
+                    style={{
+                      display: currentUser.avatar ? 'none' : 'flex'
+                    }}
+                  >
+                    {getAvatarPlaceholder()}
+                  </div>
+                  <span className="user-name">{currentUser.name}</span>
                 </div>
-                <button onClick={handleEditProfile} className="edit-profile-btn">
+                <button 
+                  onClick={handleEditProfile} 
+                  className="edit-profile-btn"
+                  disabled={isLoggingOut}
+                >
                   Edit Profile
                 </button>
-                <button onClick={onLogout} className="logout-btn">
-                  Sign Out
+                <button 
+                  onClick={handleLogout} 
+                  className="logout-btn"
+                  disabled={isLoggingOut}
+                >
+                  {isLoggingOut ? 'Signing Out...' : 'Sign Out'}
                 </button>
               </>
             ) : (

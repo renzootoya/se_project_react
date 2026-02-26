@@ -119,3 +119,176 @@
 .link-btn:hover {
   color: #0056b3;
 }
+
+.field-error {
+  display: block;
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.success-message {
+  color: #155724;
+  font-size: 14px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #d4edda;
+  border-radius: 4px;
+  border: 1px solid #c3e6cb;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.cancel-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submit-btn {
+  flex: 1;
+}
+
+.avatar-preview {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-modal-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.modal-item-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.modal-item-info {
+  flex: 1;
+}
+
+.modal-item-info h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.likes-count {
+  color: #666;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.like-btn,
+.delete-btn,
+.close-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.like-btn {
+  background-color: #007bff;
+  color: white;
+  flex: 1;
+  min-width: 120px;
+}
+
+.like-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.like-btn.liked {
+  background-color: #dc3545;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  flex: 1;
+  min-width: 120px;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+  flex: 1;
+  min-width: 100px;
+}
+
+.close-btn:hover {
+  background-color: #5a6268;
+}
+
+.like-btn:disabled,
+.delete-btn:disabled,
+.close-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .item-modal-content {
+    flex-direction: column;
+  }
+
+  .modal-item-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .like-btn,
+  .delete-btn,
+  .close-btn {
+    width: 100%;
+  }
+}

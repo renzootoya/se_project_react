@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ItemCard.css';
 
-const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser }) => {
+const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser, onDelete }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
   const isLiked = item.likes && item.likes.some(id => id === currentUser?._id);
+  const isOwner = currentUser?._id === item.owner;
 
   const handleLike = () => {
+    if (!isLoggedIn) {
+      alert('Please log in to like items');
+      return;
+    }
     onCardLike({ id: item._id, isLiked });
+  };
+
+  const handleDelete = async () => {
+    if (!isOwner) return;
+    
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      setIsDeleting(true);
+      try {
+        await onDelete(item._id);
+      } catch (error) {
+        console.error('Failed to delete item:', error);
+        alert('Failed to delete item. Please try again.');
+      } finally {
+        setIsDeleting(false);
+      }
+    }
   };
 
   return (
@@ -16,8 +38,19 @@ const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser }) => {
           <button 
             onClick={handleLike} 
             className={`like-button ${isLiked ? 'liked' : ''}`}
+            title={isLiked ? 'Unlike' : 'Like'}
           >
             {isLiked ? '❤️' : '🤍'}
+          </button>
+        )}
+        {isOwner && (
+          <button 
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="delete-button"
+            title="Delete item"
+          >
+            {isDeleting ? '...' : '🗑️'}
           </button>
         )}
       </div>
@@ -28,6 +61,11 @@ const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser }) => {
             {item.weather.map(w => (
               <span key={w} className="weather-tag">{w}</span>
             ))}
+          </div>
+        )}
+        {item.likes && (
+          <div className="likes-count">
+            {item.likes.length} {item.likes.length === 1 ? 'like' : 'likes'}
           </div>
         )}
       </div>

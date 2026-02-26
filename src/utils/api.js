@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API || 'http://localhost:3000/api';
 
-const getToken = () => localStorage.getItem('token');
+const getToken = () => localStorage.getItem('jwt');
 
 export const apiCall = axios.create({
   baseURL: API_URL
