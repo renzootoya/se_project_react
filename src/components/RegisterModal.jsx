@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signup } from '../utils/auth';
 import './Modal.css';
+import './RegisterModal.css';
 
 const RegisterModal = ({ isOpen, onClose, onRegister }) => {
   const [name, setName] = useState('');

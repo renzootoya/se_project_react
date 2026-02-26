@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signin } from '../utils/auth';
 import './Modal.css';
+import './LoginModal.css';
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [email, setEmail] = useState('');
