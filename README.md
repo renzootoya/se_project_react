@@ -1,18 +1,13 @@
 # WTWR - What to Wear Right Now
 
-## 🔗 Backend Repository
-[Backend API - se_project_backend](https://github.com/renzootoya/se_project_backend)
+## 📁 Project Structure
+- **Frontend**: React application (PORT 3001)
+- **Backend**: Express.js API (PORT 3000)
 
-A full-stack React + Express + MongoDB application for managing clothing items and getting outfit recommendations based on weather.
+### Backend Setup & Usage
+See `backend/` folder for Express server setup and API documentation.
 
-## Project Structure
-
-```
-project 14/
-├── backend/          # Express.js API server
-└── frontend/         # React web application
-```
-
+---
 ## Features
 
 - **User Authentication**: Register and login with JWT tokens
