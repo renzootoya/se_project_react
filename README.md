@@ -1,5 +1,8 @@
 # WTWR - What to Wear Right Now
 
+## 🔗 Backend Repository
+[Backend API - se_project_backend](https://github.com/renzootoya/se_project_backend)
+
 A full-stack React + Express + MongoDB application for managing clothing items and getting outfit recommendations based on weather.
 
 ## Project Structure
