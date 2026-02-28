@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CurrentUserProvider, CurrentUserContext } from '../contexts/CurrentUserContext';
-import '../App.css';
+import './App.css';
 import Header from './Header.jsx';
 import Main from './Main';
 import Footer from './Footer';
