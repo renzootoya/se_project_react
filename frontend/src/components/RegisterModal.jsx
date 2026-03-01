@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signup } from '../utils/auth';
+import { signup } from '../utils/api';
 import './Modal.css';
 
 const RegisterModal = ({ isOpen, onClose, onRegister }) => {
