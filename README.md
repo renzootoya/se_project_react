@@ -1,8 +1,12 @@
 # WTWR - What to Wear Right Now
 
-## 📁 Project Structure
-- **Frontend**: React application (PORT 3001)
-- **Backend**: Express.js API (PORT 3000)
+## 🚀 Live Application
+[**Click Here to View the App**](https://sparkly-mooncake-385f9d.netlify.app)
+
+---
+
+A full-stack React + Express + MongoDB application for managing clothing items...
+
 
 ### Backend Setup & Usage
 See `backend/` folder for Express server setup and API documentation.
