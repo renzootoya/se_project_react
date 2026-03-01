@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signup } from '../utils/api';
 import './Modal.css';
 
-const RegisterModal = ({ isOpen, onClose, onRegister }) => {
+const RegisterModal = ({ onClose, onSubmit }) => {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
@@ -39,13 +39,11 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
 
       if (response.token) {
         localStorage.setItem('jwt', response.token);
-        onRegister(response.user);
-        onClose();
+        onSubmit(response.user);
         resetForm();
       }
     } catch (err) {
       setError(err.message || 'Registration failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -63,8 +61,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
     resetForm();
     onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>

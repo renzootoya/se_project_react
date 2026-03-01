@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { updateUser } from '../utils/api';
 import './Modal.css';
 
 const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
@@ -39,19 +40,11 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/users/me`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ name, avatar })
-      });
+      const data = await updateUser(token, name, avatar);
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (data.message && !data.user) {
         setError(data.message || 'Failed to update profile');
+        setLoading(false);
         return;
       }
 
@@ -62,7 +55,6 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
       }, 1500);
     } catch (err) {
       setError(err.message || 'Failed to update profile');
-    } finally {
       setLoading(false);
     }
   };

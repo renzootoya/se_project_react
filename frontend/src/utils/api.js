@@ -42,7 +42,7 @@ export const updateUser = (token, name, avatar) => {
 };
 
 export const getItems = () => {
-  return fetch(`${API_BASE_URL}/items`, {
+  return fetch(`${API_BASE_URL}/clothing`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ export const getItems = () => {
 };
 
 export const addCardLike = (token, itemId) => {
-  return fetch(`${API_BASE_URL}/items/${itemId}/likes`, {
+  return fetch(`${API_BASE_URL}/clothing/${itemId}/like`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const addCardLike = (token, itemId) => {
 };
 
 export const removeCardLike = (token, itemId) => {
-  return fetch(`${API_BASE_URL}/items/${itemId}/likes`, {
+  return fetch(`${API_BASE_URL}/clothing/${itemId}/unlike`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const removeCardLike = (token, itemId) => {
 };
 
 export const deleteItem = (token, itemId) => {
-  return fetch(`${API_BASE_URL}/items/${itemId}`, {
+  return fetch(`${API_BASE_URL}/clothing/${itemId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export const deleteItem = (token, itemId) => {
 };
 
 export const createItem = (token, name, imageUrl, weather) => {
-  return fetch(`${API_BASE_URL}/items`, {
+  return fetch(`${API_BASE_URL}/clothing`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

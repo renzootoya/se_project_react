@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signin } from '../utils/api';
 import './Modal.css';
 
-const LoginModal = ({ isOpen, onClose, onLogin }) => {
+const LoginModal = ({ onClose, onSubmit }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,13 +30,11 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
       if (response.token) {
         localStorage.setItem('jwt', response.token);
-        onLogin(response.user);
-        onClose();
+        onSubmit(response.user);
         resetForm();
       }
     } catch (err) {
       setError(err.message || 'Login failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -51,8 +49,6 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     resetForm();
     onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>

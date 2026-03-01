@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { deleteItem } from '../utils/api';
 import './Modal.css';
 
 const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
@@ -10,7 +11,7 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
 
   if (!isOpen || !item) return null;
 
-  const isOwner = currentUser && currentUser._id === item.owner;
+  const isOwner = currentUser && (currentUser._id === item.owner?._id || currentUser._id === item.owner);
   const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
 
   const handleDelete = async () => {
@@ -20,11 +21,16 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
       setIsDeleting(true);
       setError('');
       try {
-        await onDelete(item._id);
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+          setError('No authentication token found');
+          setIsDeleting(false);
+          return;
+        }
+        await deleteItem(token, item._id);
         onClose();
       } catch (err) {
         setError(err.message || 'Failed to delete item');
-      } finally {
         setIsDeleting(false);
       }
     }
@@ -39,7 +45,7 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
     setIsLiking(true);
     setError('');
     try {
-      await onLike({ clothingId: item._id, isLiked });
+      await onLike(item._id, isLiked);
     } catch (err) {
       setError(err.message || 'Failed to update like status');
     } finally {

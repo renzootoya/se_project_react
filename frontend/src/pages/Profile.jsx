@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { updateUser } from '../utils/api';
 import './Profile.css';
 
 const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
@@ -38,30 +39,21 @@ const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/users/me`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ name, avatar })
-      });
+      const data = await updateUser(token, name, avatar);
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (data.message && !data.user) {
         setError(data.message || 'Failed to update profile');
+        setLoading(false);
         return;
       }
 
       setSuccess('Profile updated successfully!');
-      onUpdateProfile({ ...currentUser, name, avatar });
+      onUpdateProfile(data.user || { ...currentUser, name, avatar });
       setTimeout(() => {
         setIsEditing(false);
       }, 1500);
     } catch (err) {
       setError(err.message || 'Failed to update profile');
-    } finally {
       setLoading(false);
     }
   };

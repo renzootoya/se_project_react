@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ItemCard from './ItemCard';
+import { getItems } from '../utils/api';
 import './Main.css';
 
 const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
@@ -11,8 +12,7 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
 
   const fetchClothing = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/clothing`);
-      const data = await response.json();
+      const data = await getItems();
       setClothingItems(data.data || []);
     } catch (err) {
       console.error('Failed to load clothing items:', err);

@@ -4,10 +4,11 @@ import './App.css';
 import { CurrentUserContext } from './contexts/CurrentUserContext';
 import Header from './components/Header';
 import Main from './components/Main';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterModal from './components/RegisterModal';
 import LoginModal from './components/LoginModal';
-import { checkToken, signup, signin, getItems } from './utils/api';
+import { checkToken, getItems } from './utils/api';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -45,40 +46,16 @@ function App() {
       .catch((err) => console.error('Error loading items:', err));
   }, []);
 
-  const handleRegister = (name, avatar, email, password) => {
-    signup(name, avatar, email, password)
-      .then((data) => {
-        if (data.token && data.user) {
-          localStorage.setItem('jwt', data.token);
-          setCurrentUser(data.user);
-          setIsLoggedIn(true);
-          setActiveModal(null);
-        } else {
-          alert(data.message || 'Registration failed');
-        }
-      })
-      .catch((err) => {
-        console.error('Registration error:', err);
-        alert('Registration failed');
-      });
+  const handleRegister = (user) => {
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    setActiveModal(null);
   };
 
-  const handleLogin = (email, password) => {
-    signin(email, password)
-      .then((data) => {
-        if (data.token && data.user) {
-          localStorage.setItem('jwt', data.token);
-          setCurrentUser(data.user);
-          setIsLoggedIn(true);
-          setActiveModal(null);
-        } else {
-          alert(data.message || 'Login failed');
-        }
-      })
-      .catch((err) => {
-        console.error('Login error:', err);
-        alert('Login failed');
-      });
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    setActiveModal(null);
   };
 
   const handleLogout = () => {
@@ -102,18 +79,17 @@ function App() {
       const { addCardLike, removeCardLike } = await import('./utils/api');
       const endpoint = isLiked ? removeCardLike : addCardLike;
       
-      const data = await endpoint(token, itemId);
+      const response = await endpoint(token, itemId);
       
       const updatedItems = clothingItems.map(item => {
         if (item._id === itemId) {
-          return { ...item, likes: data.data?.likes || item.likes };
+          return { ...item, likes: response.data?.likes || response.likes || item.likes };
         }
         return item;
       });
       setClothingItems(updatedItems);
     } catch (err) {
       console.error('Error updating like:', err);
-      alert('Failed to update like status');
     }
   };
 
@@ -149,38 +125,11 @@ function App() {
               path="/profile" 
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <div style={{ flex: 1, padding: '40px 20px' }}>
-                    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-                      <h1>My Profile</h1>
-                      {currentUser && (
-                        <div style={{ marginTop: '30px' }}>
-                          {currentUser.avatar && (
-                            <img 
-                              src={currentUser.avatar} 
-                              alt={currentUser.name}
-                              style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }}
-                            />
-                          )}
-                          <p><strong>Name:</strong> {currentUser.name}</p>
-                          <p><strong>Email:</strong> {currentUser.email}</p>
-                          <button 
-                            onClick={handleLogout}
-                            style={{
-                              marginTop: '20px',
-                              padding: '10px 20px',
-                              backgroundColor: '#dc3545',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '4px',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            Sign Out
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <Profile 
+                    currentUser={currentUser}
+                    onUpdateProfile={handleUpdateProfile}
+                    onLogout={handleLogout}
+                  />
                 </ProtectedRoute>
               } 
             />
