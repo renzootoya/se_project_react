@@ -1,22 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import RegisterModal from './RegisterModal';
-import LoginModal from './LoginModal';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Header.css';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const Header = ({
   isLoggedIn,
   currentUser,
   onLogout,
-  onShowRegister,
-  onShowLogin,
-  showRegisterModal,
-  setShowRegisterModal,
-  showLoginModal,
-  setShowLoginModal,
-  onRegister,
-  onLogin
+  onSignUp,
+  onSignIn
 }) => {
   const navigate = useNavigate();
   const { currentUser: contextUser } = useContext(CurrentUserContext);
@@ -74,13 +66,13 @@ const Header = ({
             ) : (
               <>
                 <button
-                  onClick={onShowRegister}
+                  onClick={onSignUp}
                   className="auth-btn"
                 >
                   Register
                 </button>
                 <button
-                  onClick={onShowLogin}
+                  onClick={onSignIn}
                   className="auth-btn primary"
                 >
                   Sign In
@@ -90,17 +82,6 @@ const Header = ({
           </nav>
         </div>
       </header>
-
-      <RegisterModal
-        isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
-        onRegister={onRegister}
-      />
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onLogin={onLogin}
-      />
     </>
   );
 };
