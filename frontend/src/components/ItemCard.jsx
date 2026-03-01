@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ItemModal from './ItemModal';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './ItemCard.css';
 
-const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser, onDelete }) => {
+const ItemCard = ({ item, isLoggedIn, currentUser, onCardLike, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
-  const isOwner = currentUser?._id === item.owner?._id || currentUser?._id === item.owner;
+  const [isLiking, setIsLiking] = useState(false);
+  const { currentUser: contextUser } = useContext(CurrentUserContext);
+  const user = currentUser || contextUser;
+
+  const isLiked = item.likes && item.likes.some(id => id._id === user?._id || id === user?._id);
+  const isOwner = user && (user._id === item.owner?._id || user._id === item.owner);
 
   const handleCardClick = () => {
     setIsModalOpen(true);
   };
 
-  const handleLike = async (likeData) => {
+  const handleLikeClick = async (e) => {
+    e.stopPropagation();
+    
     if (!isLoggedIn) {
       alert('Please log in to like items');
       return;
     }
-    await onCardLike(likeData);
+
+    setIsLiking(true);
+    try {
+      await onCardLike({ clothingId: item._id, isLiked });
+    } catch (err) {
+      console.error('Failed to like/unlike item:', err);
+    } finally {
+      setIsLiking(false);
+    }
   };
 
   const handleDelete = async (itemId) => {
-    await onDelete(itemId);
+    if (onDelete) {
+      await onDelete(itemId);
+    }
   };
 
   return (
@@ -28,6 +45,16 @@ const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser, onDelete }) => {
       <div className="item-card" onClick={handleCardClick}>
         <div className="item-image-container">
           <img src={item.imageUrl} alt={item.name} className="item-image" />
+          {isLoggedIn && (
+            <button
+              className={`like-button ${isLiked ? 'liked' : ''}`}
+              onClick={handleLikeClick}
+              disabled={isLiking}
+              title={isLiked ? 'Unlike' : 'Like'}
+            >
+              {isLiked ? '❤️' : '🤍'}
+            </button>
+          )}
         </div>
         <div className="item-info">
           <h3>{item.name}</h3>
@@ -49,9 +76,8 @@ const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser, onDelete }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         item={item}
-        currentUser={currentUser}
         onDelete={handleDelete}
-        onLike={handleLike}
+        onLike={onCardLike}
       />
     </>
   );

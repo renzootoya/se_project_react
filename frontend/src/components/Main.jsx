@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ItemCard from './ItemCard';
-import WeatherCard from './WeatherCard';
-import { clothingAPI } from '../utils/api';
 import './Main.css';
 
-const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike, onDeleteClothing }) => {
-  const weatherTypes = ['Hot', 'Warm', 'Cool', 'Cold'];
+const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchClothing();
@@ -15,28 +11,17 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
 
   const fetchClothing = async () => {
     try {
-      const response = await clothingAPI.getClothing();
-      const items = response.data?.data || response.data || [];
-      setClothingItems(items);
+      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/clothing`);
+      const data = await response.json();
+      setClothingItems(data.data || []);
     } catch (err) {
-      setError('Failed to load clothing items');
-      console.error(err);
+      console.error('Failed to load clothing items:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (itemId) => {
-    try {
-      await onDeleteClothing(itemId);
-    } catch (err) {
-      console.error('Failed to delete item:', err);
-      throw err;
-    }
-  };
-
-  if (loading) return <div className="main-container"><p className="loading">Loading...</p></div>;
-  if (error) return <div className="main-container"><p className="error">{error}</p></div>;
+  if (loading) return <div className="main-container"><p>Loading...</p></div>;
 
   return (
     <main className="main-container">
@@ -45,8 +30,16 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
       <section className="weather-section">
         <h2>Weather Guide</h2>
         <div className="weather-grid">
-          {weatherTypes.map(weather => (
-            <WeatherCard key={weather} weather={weather} />
+          {['Hot', 'Warm', 'Cool', 'Cold'].map(weather => (
+            <div key={weather} className="weather-card">
+              <div className="weather-icon">
+                {weather === 'Hot' && '☀️'}
+                {weather === 'Warm' && '🌤️'}
+                {weather === 'Cool' && '🌥️'}
+                {weather === 'Cold' && '❄️'}
+              </div>
+              <h3>{weather}</h3>
+            </div>
           ))}
         </div>
       </section>
@@ -59,10 +52,9 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
             <ItemCard
               key={item._id}
               item={item}
-              onCardLike={onCardLike}
               isLoggedIn={isLoggedIn}
               currentUser={currentUser}
-              onDelete={handleDelete}
+              onCardLike={onCardLike}
             />
           ))}
         </div>

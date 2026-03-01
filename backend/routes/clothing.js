@@ -5,8 +5,8 @@ const auth = require('../middleware/auth');
 
 router.get('/', clothingController.getClothing);
 router.post('/', auth, clothingController.createClothing);
-router.post('/like', auth, clothingController.likeClothing);
-router.post('/unlike', auth, clothingController.unlikeClothing);
+router.post('/:id/like', auth, clothingController.likeClothing);
+router.delete('/:id/unlike', auth, clothingController.unlikeClothing);
 router.delete('/:id', auth, clothingController.deleteClothing);
 
 module.exports = router;

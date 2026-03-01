@@ -7,14 +7,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        <div className="footer-content">
-          <p>&copy; {currentYear} WTWR - What to Wear. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="/">Home</a>
-            <a href="/profile">Profile</a>
-            <a href="/">About</a>
-          </div>
-        </div>
+        <p>&copy; {currentYear} WTWR - What to Wear Right Now. All rights reserved.</p>
       </div>
     </footer>
   );

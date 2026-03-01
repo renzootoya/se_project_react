@@ -1,11 +1,37 @@
-const User = require('../models/User');
 const Clothing = require('../models/Clothing');
+
+exports.getClothing = async (req, res) => {
+  try {
+    const clothing = await Clothing.find().populate('owner', 'name avatar').populate('likes', '_id');
+    res.status(200).json({ data: clothing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.createClothing = async (req, res) => {
+  try {
+    const { name, imageUrl, weather } = req.body;
+
+    if (!name || !imageUrl || !weather) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
+    const clothing = new Clothing({ name, imageUrl, weather, owner: req.user.id });
+    await clothing.save();
+    await clothing.populate('owner', 'name avatar');
+
+    res.status(201).json({ data: clothing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.likeClothing = async (req, res) => {
   try {
-    const { clothingId } = req.body;
+    const { id } = req.params;
 
-    const clothing = await Clothing.findById(clothingId);
+    const clothing = await Clothing.findById(id);
     if (!clothing) {
       return res.status(404).json({ message: 'Clothing not found' });
     }
@@ -28,42 +54,20 @@ exports.likeClothing = async (req, res) => {
 
 exports.unlikeClothing = async (req, res) => {
   try {
-    const { clothingId } = req.body;
+    const { id } = req.params;
 
-    const clothing = await Clothing.findById(clothingId);
+    const clothing = await Clothing.findById(id);
     if (!clothing) {
       return res.status(404).json({ message: 'Clothing not found' });
     }
 
-    clothing.likes = clothing.likes.filter(id => id.toString() !== req.user.id);
+    clothing.likes = clothing.likes.filter(likeId => likeId.toString() !== req.user.id);
     await clothing.save();
 
     res.status(200).json({
       message: 'Clothing unliked',
       data: clothing
     });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-exports.getClothing = async (req, res) => {
-  try {
-    const clothing = await Clothing.find().populate('owner', 'name avatar').populate('likes', '_id');
-    res.status(200).json({ data: clothing });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-exports.createClothing = async (req, res) => {
-  try {
-    const { name, imageUrl, weather } = req.body;
-
-    const clothing = new Clothing({ name, imageUrl, weather, owner: req.user.id });
-    await clothing.save();
-
-    res.status(201).json({ data: clothing });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

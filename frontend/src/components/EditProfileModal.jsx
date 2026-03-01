@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Modal.css';
 
-const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => {
+const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
   const [success, setSuccess] = useState('');
+  const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
     if (currentUser && isOpen) {
@@ -15,36 +16,17 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
       setAvatar(currentUser.avatar || '');
       setError('');
       setSuccess('');
-      setValidationErrors({});
     }
   }, [currentUser, isOpen]);
-
-  const validateForm = () => {
-    const errors = {};
-
-    if (!name.trim()) {
-      errors.name = 'Name is required';
-    } else if (name.trim().length < 2) {
-      errors.name = 'Name must be at least 2 characters';
-    }
-
-    if (avatar && !/^https?:\/\/.+/.test(avatar)) {
-      errors.avatar = 'Avatar must be a valid URL';
-    }
-
-    return errors;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setValidationErrors({});
     setLoading(true);
 
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
+    if (!name.trim()) {
+      setError('Name is required');
       setLoading(false);
       return;
     }
@@ -74,7 +56,7 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
       }
 
       setSuccess('Profile updated successfully!');
-      onUpdateProfile(data.user || { name, avatar });
+      onUpdateProfile(data.user || { ...currentUser, name, avatar });
       setTimeout(() => {
         onClose();
       }, 1500);
@@ -90,7 +72,6 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
     setAvatar(currentUser?.avatar || '');
     setError('');
     setSuccess('');
-    setValidationErrors({});
     onClose();
   };
 
@@ -111,7 +92,6 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
               placeholder="Enter your name"
               disabled={loading}
             />
-            {validationErrors.name && <span className="field-error">{validationErrors.name}</span>}
           </div>
           <div className="form-group">
             <label>Avatar URL</label>
@@ -122,7 +102,6 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateProfile }) => 
               placeholder="Enter avatar URL (optional)"
               disabled={loading}
             />
-            {validationErrors.avatar && <span className="field-error">{validationErrors.avatar}</span>}
           </div>
           {avatar && (
             <div className="avatar-preview">

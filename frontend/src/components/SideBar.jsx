@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './SideBar.css';
 
-const SideBar = ({ currentUser, isOpen, onClose }) => {
+const SideBar = ({ isOpen, onClose }) => {
+  const { currentUser } = useContext(CurrentUserContext);
+
   return (
     <>
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}

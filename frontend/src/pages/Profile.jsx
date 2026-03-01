@@ -1,54 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import SideBar from '../components/SideBar';
-import ClothesSection from '../components/ClothesSection';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
-const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLoggedIn, onDeleteClothing }) => {
-  const contextUser = useContext(CurrentUserContext);
-  const user = currentUser || contextUser?.currentUser;
-  
+const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
-    if (user) {
-      setName(user.name || '');
-      setAvatar(user.avatar || '');
+    if (currentUser) {
+      setName(currentUser.name || '');
+      setAvatar(currentUser.avatar || '');
     }
-  }, [user]);
-
-  const validateForm = () => {
-    const errors = {};
-
-    if (!name.trim()) {
-      errors.name = 'Name is required';
-    } else if (name.trim().length < 2) {
-      errors.name = 'Name must be at least 2 characters';
-    }
-
-    if (avatar && !/^https?:\/\/.+/.test(avatar)) {
-      errors.avatar = 'Avatar must be a valid URL';
-    }
-
-    return errors;
-  };
+  }, [currentUser]);
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setValidationErrors({});
     setLoading(true);
 
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
+    if (!name.trim()) {
+      setError('Name is required');
       setLoading(false);
       return;
     }
@@ -61,7 +38,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/auth/me`, {
+      const response = await fetch(`${process.env.REACT_APP_API || 'http://localhost:3000/api'}/users/me`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +55,7 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
       }
 
       setSuccess('Profile updated successfully!');
-      onUpdateProfile(data.user || { ...user, name, avatar });
+      onUpdateProfile({ ...currentUser, name, avatar });
       setTimeout(() => {
         setIsEditing(false);
       }, 1500);
@@ -90,59 +67,69 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
   };
 
   const handleCancel = () => {
-    setName(user?.name || '');
-    setAvatar(user?.avatar || '');
+    setName(currentUser?.name || '');
+    setAvatar(currentUser?.avatar || '');
     setIsEditing(false);
     setError('');
     setSuccess('');
-    setValidationErrors({});
   };
 
-  if (!user) {
+  const handleSignOut = () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      localStorage.removeItem('jwt');
+      onLogout();
+      navigate('/');
+    }
+  };
+
+  if (!currentUser) {
     return <div className="profile-container"><p>Loading profile...</p></div>;
   }
 
   return (
-    <div className="profile-page">
-      <SideBar currentUser={user} />
-      <div className="profile-container">
-        <div className="profile-card">
-          <div className="profile-header">
-            <h1>My Profile</h1>
-          </div>
+    <div className="profile-container">
+      <div className="profile-card">
+        <div className="profile-header">
+          <h1>My Profile</h1>
+        </div>
 
-          {success && <div className="success-message">{success}</div>}
-          {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+        {error && <div className="error-message">{error}</div>}
 
-          <div className="profile-content">
+        <div className="profile-content">
           {!isEditing ? (
             <>
               <div className="profile-info">
-                {user.avatar ? (
+                {currentUser.avatar ? (
                   <img
-                    src={user.avatar}
-                    alt={user.name}
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
                     className="avatar"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
                   />
                 ) : null}
                 <div className="info-group">
                   <label>Name</label>
-                  <p>{user.name}</p>
+                  <p>{currentUser.name}</p>
                 </div>
                 <div className="info-group">
                   <label>Email</label>
-                  <p>{user.email}</p>
+                  <p>{currentUser.email}</p>
                 </div>
               </div>
-              <button
-                className="edit-btn"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
+              <div className="profile-actions">
+                <button
+                  className="edit-btn"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Profile
+                </button>
+                <button
+                  className="signout-btn"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
+              </div>
             </>
           ) : (
             <form onSubmit={handleSaveProfile}>
@@ -155,7 +142,6 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
                   placeholder="Enter your name"
                   disabled={loading}
                 />
-                {validationErrors.name && <span className="field-error">{validationErrors.name}</span>}
               </div>
               <div className="form-group">
                 <label>Avatar URL</label>
@@ -166,7 +152,6 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
                   placeholder="Enter avatar URL"
                   disabled={loading}
                 />
-                {validationErrors.avatar && <span className="field-error">{validationErrors.avatar}</span>}
               </div>
               {avatar && (
                 <div className="avatar-preview">
@@ -174,9 +159,6 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
                     src={avatar}
                     alt="Avatar Preview"
                     className="avatar"
-                    onError={(e) => {
-                      e.target.alt = 'Invalid URL';
-                    }}
                   />
                 </div>
               )}
@@ -195,16 +177,8 @@ const Profile = ({ currentUser, onUpdateProfile, clothingItems, onCardLike, isLo
               </div>
             </form>
           )}
-          </div>
         </div>
       </div>
-      <ClothesSection 
-        clothingItems={clothingItems} 
-        onCardLike={onCardLike} 
-        isLoggedIn={isLoggedIn} 
-        currentUser={user}
-        onDelete={onDeleteClothing}
-      />
     </div>
   );
 };

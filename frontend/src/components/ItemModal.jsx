@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Modal.css';
 
-const ItemModal = ({ isOpen, onClose, item, currentUser, onDelete, onLike }) => {
+const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [error, setError] = useState('');
+  const { currentUser } = useContext(CurrentUserContext);
 
-  const isOwner = currentUser?._id === item?.owner?._id || currentUser?._id === item?.owner;
-  const isLiked = item?.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
+  if (!isOpen || !item) return null;
+
+  const isOwner = currentUser && currentUser._id === item.owner;
+  const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
 
   const handleDelete = async () => {
     if (!isOwner || !item) return;
@@ -42,8 +46,6 @@ const ItemModal = ({ isOpen, onClose, item, currentUser, onDelete, onLike }) => 
       setIsLiking(false);
     }
   };
-
-  if (!isOpen || !item) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>

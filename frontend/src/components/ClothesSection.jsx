@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ItemCard from './ItemCard';
 import './ClothesSection.css';
 
-const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, currentUser, onDelete }) => {
+const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, onDelete }) => {
+  const { currentUser } = useContext(CurrentUserContext);
+
   const userClothes = clothingItems.filter(item => 
-    item.owner === currentUser?._id || item.owner?._id === currentUser?._id
+    currentUser && (item.owner === currentUser._id || item.owner?._id === currentUser._id)
   );
+
+  if (!currentUser) {
+    return (
+      <section className="clothes-section">
+        <h2>My Clothes</h2>
+        <p className="empty-message">Please log in to view your clothing items.</p>
+      </section>
+    );
+  }
 
   if (userClothes.length === 0) {
     return (

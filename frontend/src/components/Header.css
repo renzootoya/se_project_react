@@ -35,10 +35,14 @@
 }
 
 .nav-link {
+  background: none;
+  border: none;
   color: #333;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
   transition: color 0.3s;
+  font-size: 14px;
 }
 
 .nav-link:hover {
@@ -52,8 +56,9 @@
   color: #007bff;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.3s;
+  font-size: 14px;
 }
 
 .auth-btn:hover {
@@ -64,7 +69,6 @@
 .auth-btn.primary {
   background-color: #007bff;
   color: white;
-  border-color: #007bff;
 }
 
 .auth-btn.primary:hover {
@@ -72,19 +76,15 @@
   border-color: #0056b3;
 }
 
-.logout-btn {
-  padding: 8px 16px;
+.auth-btn.logout-btn {
   background-color: #dc3545;
+  border-color: #dc3545;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s;
 }
 
-.logout-btn:hover {
+.auth-btn.logout-btn:hover {
   background-color: #c82333;
+  border-color: #c82333;
 }
 
 .user-section {
@@ -110,8 +110,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 .user-name {
@@ -120,91 +120,18 @@
   font-size: 14px;
 }
 
-.edit-profile-btn {
-  padding: 8px 16px;
-  border: 1px solid #28a745;
-  background-color: white;
-  color: #28a745;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.edit-profile-btn:hover {
-  background-color: #28a745;
-  color: white;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
-  padding: 0;
-  width: 40px;
-  height: 40px;
-}
-
-.menu-toggle:hover {
-  color: #007bff;
-}
-
-.add-item-btn {
-  padding: 8px 16px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s;
-}
-
-.add-item-btn:hover {
-  background-color: #218838;
-}
-
-.add-item-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.profile-link {
-  padding: 8px 16px;
-  color: #007bff;
-  text-decoration: none;
-  border: 1px solid #007bff;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.profile-link:hover {
-  background-color: #007bff;
-  color: white;
-}
-
 @media (max-width: 768px) {
-  .menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .header-container {
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .nav {
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .user-name {
     display: none;
-  }
-
-  .edit-profile-btn,
-  .add-item-btn {
-    padding: 6px 12px;
-    font-size: 12px;
   }
 }

@@ -1,8 +1,14 @@
 # WTWR Frontend
 
-React web application for the WTWR (What to Wear Right Now) project.
+React frontend for the WTWR (What to Wear Right Now) application.
 
-## Setup
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
 
 1. Install dependencies:
 ```bash
@@ -19,158 +25,300 @@ REACT_APP_API=http://localhost:3000/api
 npm start
 ```
 
-The app will open at `http://localhost:3001`
+The app will run on `http://localhost:3001`
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── Header.js           # Navigation header with auth buttons
+│   ├── Header.jsx          - Navigation header with auth buttons
 │   ├── Header.css
-│   ├── RegisterModal.js    # User registration form
-│   ├── LoginModal.js       # User login form
-│   └── Modal.css           # Shared modal styles
+│   ├── Main.jsx            - Home page with clothing grid
+│   ├── Main.css
+│   ├── ItemCard.jsx        - Individual clothing item card
+│   ├── ItemCard.css
+│   ├── Footer.jsx          - Footer component
+│   ├── Footer.css
+│   ├── LoginModal.jsx      - Login form modal
+│   ├── RegisterModal.jsx   - Registration form modal
+│   ├── Modal.css           - Shared modal styles
+│   ├── ProtectedRoute.jsx  - Route protection wrapper
+│   └── ToggleSwitch.jsx    - Toggle switch component
 ├── pages/
-│   ├── Home.js             # Clothing items display
-│   ├── Home.css
-│   ├── Profile.js          # User profile page
+│   ├── Profile.jsx         - User profile page
 │   └── Profile.css
-├── context/
-│   └── CurrentUserContext.js  # Global user state management
+├── contexts/
+│   └── CurrentUserContext.jsx - User context provider
 ├── utils/
-│   ├── api.js              # API calls and axios setup
-│   └── ProtectedRoute.js   # Route protection component
-├── App.js                  # Main app component
+│   └── auth.js             - Authentication utilities
+├── App.jsx                 - Main app component
 ├── App.css
-├── index.js                # React entry point
+├── index.js                - React entry point
 └── index.css
 ```
 
-## Components
+## 🎯 Key Features
 
-### Header
-- Displays WTWR logo
-- Shows authentication buttons (Sign Up/Log In) when not logged in
-- Shows user name and Sign Out button when logged in
-- Manages modal visibility for auth forms
+### Authentication
+- User registration with name, email, password, and optional avatar
+- User login with email and password
+- JWT token storage in localStorage
+- Automatic token verification on app load
+- Protected routes for authenticated users only
 
-### RegisterModal
-- Form for new user registration
-- Fields: Name, Email, Password
-- Validates input and handles registration
-- Can switch to login modal
+### User Profile
+- View user information (name, email, avatar)
+- Edit profile with validation
+- Avatar preview when editing
+- Success/error messages
 
-### LoginModal
-- Form for user login
-- Fields: Email, Password
-- Validates credentials and handles login
-- Can switch to registration modal
+### Clothing Management
+- Browse all clothing items
+- View item details (name, image, weather tags)
+- Like/unlike items (logged-in users only)
+- Like count display
+- Weather-based organization (Hot, Warm, Cool, Cold)
 
-### Home Page
-- Displays all available clothing items in a grid
-- Shows clothing name, image, and weather tags
-- Like/Unlike button for each item
-- Requires login to like items
+### Responsive Design
+- Mobile-first approach
+- Responsive grid layouts
+- Adaptive navigation
+- Touch-friendly buttons
 
-### Profile Page
-- Displays current user information
-- Shows user avatar, name, and email
-- Edit profile functionality
-- Can update name and avatar URL
-- Protected route - only accessible when logged in
+## 🔧 Configuration
 
-## Context
+### Environment Variables
 
-### CurrentUserContext
-Manages global user state:
-- `currentUser` - Current logged-in user data
-- `isLoggedIn` - Authentication status
-- `loading` - Loading state
-- `login(token, user)` - Set user and token
-- `logout()` - Clear user and token
-- `updateUser(updatedUser)` - Update user data
-- `API_URL` - Base API URL
+Create a `.env` file in the root directory:
 
-## Utilities
-
-### api.js
-- Creates axios instance with base URL
-- Automatically adds JWT token to request headers
-- Exports API functions for auth and clothing endpoints
-
-### ProtectedRoute.js
-- Wrapper component for protected routes
-- Redirects to home if not authenticated
-- Shows loading state while checking auth
-
-## Features
-
-### Authentication Flow
-1. User clicks Sign Up or Log In
-2. Modal opens with form
-3. Form submitted to backend
-4. JWT token received and stored in localStorage
-5. User data stored in CurrentUserContext
-6. User redirected to home page
-
-### Like/Unlike Flow
-1. User clicks heart icon on clothing item
-2. API call sent to backend with clothing ID
-3. Item added/removed from user's likedClothes
-4. UI updates to show liked status
-
-### Profile Edit Flow
-1. User navigates to profile page
-2. Clicks "Edit Profile" button
-3. Form appears with current data
-4. User updates name and/or avatar
-5. Changes saved to backend
-6. Profile updated in context
-
-## Available Scripts
-
-```bash
-npm start      # Start development server
-npm build      # Build for production
-npm test       # Run tests
-npm eject      # Eject from create-react-app (irreversible)
+```
+REACT_APP_API=http://localhost:3000/api
 ```
 
-## Environment Variables
+For production:
+```
+REACT_APP_API=https://your-backend-url.com/api
+```
 
-- `REACT_APP_API` - Backend API base URL (default: http://localhost:3000/api)
-
-## Styling
-
-- Uses CSS modules and inline styles
-- Responsive design with CSS Grid and Flexbox
-- Mobile-first approach
-- Color scheme:
-  - Primary: #007bff (Blue)
-  - Success: #28a745 (Green)
-  - Danger: #dc3545 (Red)
-  - Background: #f5f5f5 (Light Gray)
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Dependencies
+## 📦 Dependencies
 
 - `react` - UI library
 - `react-dom` - React DOM rendering
 - `react-router-dom` - Client-side routing
-- `axios` - HTTP client
-- `react-scripts` - Create React App scripts
+- `react-scripts` - Build scripts
 
-## Notes
+## 🚀 Available Scripts
 
-- JWT token stored in localStorage
-- Token automatically included in all API requests
-- Token persists across page refreshes
-- Token cleared on logout
-- All routes except home require authentication for certain features
+### `npm start`
+Runs the app in development mode.
+Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+
+### `npm run build`
+Builds the app for production to the `build` folder.
+
+### `npm test`
+Launches the test runner in interactive watch mode.
+
+### `npm run eject`
+Ejects from Create React App (irreversible).
+
+## 🔐 Authentication Flow
+
+1. User registers or logs in
+2. Backend returns JWT token
+3. Token is stored in localStorage
+4. Token is sent with every API request in Authorization header
+5. On app load, token is verified and user is auto-logged in if valid
+6. Protected routes redirect to home if user is not logged in
+
+## 🎨 Styling
+
+- CSS3 with responsive design
+- Mobile-first approach
+- Flexbox and CSS Grid layouts
+- Smooth transitions and hover effects
+- Professional color scheme
+
+### Color Palette
+- Primary: #007bff (Blue)
+- Success: #28a745 (Green)
+- Danger: #dc3545 (Red)
+- Background: #f5f5f5 (Light Gray)
+- Text: #333 (Dark Gray)
+
+## 📱 Responsive Breakpoints
+
+- Desktop: Full layout
+- Tablet (768px): Adjusted spacing
+- Mobile (< 768px): Single column, optimized for touch
+
+## 🧪 Testing
+
+Test the app locally:
+
+1. Start backend: `cd backend && npm run dev`
+2. Start frontend: `cd frontend && npm start`
+3. Open browser to `http://localhost:3001`
+
+### Test Scenarios
+
+**Registration:**
+1. Click "Register"
+2. Fill in name, email, password
+3. Click "Sign Up"
+4. Should be logged in automatically
+
+**Login:**
+1. Click "Sign In"
+2. Enter email and password
+3. Click "Log In"
+4. Should be logged in
+
+**Like Item:**
+1. Log in
+2. Click heart icon on any item
+3. Heart should fill in red
+4. Like count should increase
+
+**Edit Profile:**
+1. Log in
+2. Click "Profile"
+3. Click "Edit Profile"
+4. Update name/avatar
+5. Click "Save Changes"
+6. Changes should be reflected
+
+**Logout:**
+1. Click "Sign Out"
+2. Should return to home
+3. Should see login/register buttons
+
+## 🚀 Deployment
+
+### Netlify
+
+1. Build the project:
+```bash
+npm run build
+```
+
+2. Connect GitHub repository to Netlify
+3. Set build command: `npm run build`
+4. Set publish directory: `build`
+5. Add environment variable: `REACT_APP_API=<backend-url>`
+6. Deploy
+
+### Vercel
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Set environment variable: `REACT_APP_API=<backend-url>`
+4. Deploy
+
+### Manual Deployment
+
+1. Build: `npm run build`
+2. Upload `build` folder to web server
+3. Configure server to serve `index.html` for all routes
+4. Set `REACT_APP_API` environment variable
+
+## 🐛 Troubleshooting
+
+### Blank Page
+- Check browser console for errors
+- Verify `REACT_APP_API` is set correctly
+- Ensure backend is running
+
+### Login Not Working
+- Check network tab in DevTools
+- Verify backend URL is correct
+- Ensure backend is running on correct port
+
+### Token Not Persisting
+- Check if localStorage is enabled
+- Clear browser cache and try again
+- Check browser console for errors
+
+### CORS Errors
+- Verify backend CORS is configured
+- Check `REACT_APP_API` environment variable
+- Ensure backend is running
+
+## 📚 Component Documentation
+
+### Header Component
+Displays navigation and user information.
+
+Props:
+- `isLoggedIn` - Boolean
+- `currentUser` - User object
+- `onLogout` - Logout handler
+- `onShowRegister` - Show register modal
+- `onShowLogin` - Show login modal
+- `showRegisterModal` - Register modal visibility
+- `setShowRegisterModal` - Set register modal visibility
+- `showLoginModal` - Login modal visibility
+- `setShowLoginModal` - Set login modal visibility
+- `onRegister` - Register handler
+- `onLogin` - Login handler
+
+### Main Component
+Displays clothing items and weather guide.
+
+Props:
+- `currentUser` - Current user object
+- `isLoggedIn` - Boolean
+- `clothingItems` - Array of items
+- `setClothingItems` - Update items
+
+### Profile Component
+Displays and edits user profile.
+
+Props:
+- `currentUser` - Current user object
+- `onUpdateProfile` - Update handler
+
+### ItemCard Component
+Displays individual clothing item.
+
+Props:
+- `item` - Clothing item object
+- `isLoggedIn` - Boolean
+- `currentUser` - Current user object
+- `onLike` - Like handler
+
+## 🔄 State Management
+
+App-level state:
+- `isLoggedIn` - Authentication status
+- `currentUser` - Current user data
+- `clothingItems` - All clothing items
+- `showRegisterModal` - Register modal visibility
+- `showLoginModal` - Login modal visibility
+- `loading` - Initial load state
+
+Context:
+- `CurrentUserContext` - Global user state
+
+## 📝 API Integration
+
+All API calls use the `REACT_APP_API` environment variable as the base URL.
+
+Example:
+```javascript
+const response = await fetch(`${process.env.REACT_APP_API}/clothing`);
+```
+
+Authentication:
+```javascript
+const response = await fetch(url, {
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+  }
+});
+```
+
+---
+
+**For backend documentation, see backend/README.md**

@@ -1,16 +1,13 @@
-import './App.css';
+import './src/App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Main from './components/Main';
-import Footer from './components/Footer';
-import Profile from './pages/Profile';
-import ProtectedRoute from './components/ProtectedRoute';
-import AddItemModal from './components/AddItemModal';
-import EditProfileModal from './components/EditProfileModal';
-import { CurrentUserContext } from './contexts/CurrentUserContext';
-import { authAPI, clothingAPI } from './utils/api';
-import { checkToken } from './utils/auth';
+import Header from './src/components/Header';
+import Main from './src/components/Main';
+import Footer from './src/components/Footer';
+import Profile from './src/pages/Profile';
+import ProtectedRoute from './src/components/ProtectedRoute';
+import { CurrentUserContext } from './src/contexts/CurrentUserContext';
+import { checkToken } from './src/utils/auth';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,8 +15,6 @@ function App() {
   const [clothingItems, setClothingItems] = useState([]);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,32 +45,16 @@ function App() {
     }
   };
 
-  const handleRegister = async (name, avatar, email, password) => {
-    try {
-      const response = await authAPI.register(name, avatar, email, password);
-      if (response.data?.user) {
-        setCurrentUser(response.data.user);
-        setIsLoggedIn(true);
-        setShowRegisterModal(false);
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
-    }
+  const handleRegister = (user) => {
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    setShowRegisterModal(false);
   };
 
-  const handleLogin = async (email, password) => {
-    try {
-      const response = await authAPI.login(email, password);
-      if (response.data?.user) {
-        setCurrentUser(response.data.user);
-        setIsLoggedIn(true);
-        setShowLoginModal(false);
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
   };
 
   const handleLogout = () => {
@@ -84,66 +63,50 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const handleAddItem = async (itemData) => {
-    try {
-      const response = await clothingAPI.createClothing(
-        itemData.name,
-        itemData.imageUrl,
-        itemData.weather
-      );
-      if (response.data) {
-        setClothingItems([...clothingItems, response.data]);
-        setShowAddItemModal(false);
-      }
-    } catch (error) {
-      console.error('Failed to add item:', error);
-      throw error;
-    }
+  const handleUpdateProfile = (updatedUser) => {
+    setCurrentUser(updatedUser);
   };
 
   const handleCardLike = async (likeData) => {
     try {
-      if (likeData.isLiked) {
-        await clothingAPI.unlikeClothing(likeData.clothingId);
-      } else {
-        await clothingAPI.likeClothing(likeData.clothingId);
+      const token = localStorage.getItem('jwt');
+      if (!token) {
+        alert('Please log in to like items');
+        return;
       }
+
+      const endpoint = likeData.isLiked ? 'unlike' : 'like';
+      const response = await fetch(
+        `${process.env.REACT_APP_API || 'http://localhost:3000/api'}/clothing/${likeData.clothingId}/${endpoint}`,
+        {
+          method: likeData.isLiked ? 'DELETE' : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to update like status');
+      }
+
+      const data = await response.json();
 
       const updatedItems = clothingItems.map(item => {
         if (item._id === likeData.clothingId) {
-          if (likeData.isLiked) {
-            return {
-              ...item,
-              likes: item.likes.filter(id => id !== currentUser._id)
-            };
-          } else {
-            return {
-              ...item,
-              likes: [...(item.likes || []), currentUser._id]
-            };
-          }
+          return {
+            ...item,
+            likes: data.data?.likes || item.likes
+          };
         }
         return item;
       });
       setClothingItems(updatedItems);
-    } catch (error) {
-      console.error('Failed to like/unlike item:', error);
-      throw error;
+    } catch (err) {
+      console.error('Failed to like/unlike item:', err);
+      alert('Failed to update like status');
     }
-  };
-
-  const handleDeleteClothing = async (itemId) => {
-    try {
-      await clothingAPI.deleteClothing(itemId);
-      setClothingItems(clothingItems.filter(item => item._id !== itemId));
-    } catch (error) {
-      console.error('Failed to delete item:', error);
-      throw error;
-    }
-  };
-
-  const handleUpdateProfile = (updatedUser) => {
-    setCurrentUser(updatedUser);
   };
 
   if (loading) {
@@ -151,7 +114,7 @@ function App() {
   }
 
   return (
-    <CurrentUserContext.Provider value={{ currentUser, isLoggedIn }}>
+    <CurrentUserContext.Provider value={{ currentUser, isLoggedIn, setCurrentUser }}>
       <Router>
         <div className="app">
           <Header
@@ -160,14 +123,12 @@ function App() {
             onLogout={handleLogout}
             onShowRegister={() => setShowRegisterModal(true)}
             onShowLogin={() => setShowLoginModal(true)}
-            onShowAddItem={() => setShowAddItemModal(true)}
             showRegisterModal={showRegisterModal}
             setShowRegisterModal={setShowRegisterModal}
             showLoginModal={showLoginModal}
             setShowLoginModal={setShowLoginModal}
             onRegister={handleRegister}
             onLogin={handleLogin}
-            onToggleSidebar={() => {}}
           />
 
           <Routes>
@@ -180,7 +141,6 @@ function App() {
                   clothingItems={clothingItems}
                   setClothingItems={setClothingItems}
                   onCardLike={handleCardLike}
-                  onDeleteClothing={handleDeleteClothing}
                 />
               }
             />
@@ -191,10 +151,7 @@ function App() {
                   <Profile
                     currentUser={currentUser}
                     onUpdateProfile={handleUpdateProfile}
-                    clothingItems={clothingItems}
-                    onCardLike={handleCardLike}
-                    isLoggedIn={isLoggedIn}
-                    onDeleteClothing={handleDeleteClothing}
+                    onLogout={handleLogout}
                   />
                 </ProtectedRoute>
               }
@@ -202,19 +159,6 @@ function App() {
           </Routes>
 
           <Footer />
-
-          <AddItemModal
-            isOpen={showAddItemModal}
-            onClose={() => setShowAddItemModal(false)}
-            onAddItem={handleAddItem}
-          />
-
-          <EditProfileModal
-            isOpen={showEditProfileModal}
-            onClose={() => setShowEditProfileModal(false)}
-            currentUser={currentUser}
-            onUpdateProfile={handleUpdateProfile}
-          />
         </div>
       </Router>
     </CurrentUserContext.Provider>
@@ -222,4 +166,3 @@ function App() {
 }
 
 export default App;
-

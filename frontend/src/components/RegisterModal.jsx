@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { signup } from '../utils/auth';
 import './Modal.css';
-import './RegisterModal.css';
 
 const RegisterModal = ({ isOpen, onClose, onRegister }) => {
   const [name, setName] = useState('');
@@ -11,49 +10,20 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
-
-  const validateForm = () => {
-    const errors = {};
-
-    if (!name.trim()) {
-      errors.name = 'Name is required';
-    } else if (name.trim().length < 2) {
-      errors.name = 'Name must be at least 2 characters';
-    }
-
-    if (!email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address';
-    }
-
-    if (!password) {
-      errors.password = 'Password is required';
-    } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-
-    if (password !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (avatar && !/^https?:\/\/.+/.test(avatar)) {
-      errors.avatar = 'Avatar must be a valid URL';
-    }
-
-    return errors;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setValidationErrors({});
     setLoading(true);
 
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
+    if (!name.trim() || !email.trim() || !password) {
+      setError('Please fill in all required fields');
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
       setLoading(false);
       return;
     }
@@ -69,12 +39,12 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
 
       if (response.token) {
         localStorage.setItem('jwt', response.token);
-        onRegister(name, avatar, email, password);
+        onRegister(response.user);
         onClose();
         resetForm();
       }
     } catch (err) {
-      setError(err.message || 'Registration failed. Please try again.');
+      setError(err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -87,7 +57,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
     setPassword('');
     setConfirmPassword('');
     setError('');
-    setValidationErrors({});
   };
 
   const handleClose = () => {
@@ -112,7 +81,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
               placeholder="Enter your name"
               disabled={loading}
             />
-            {validationErrors.name && <span className="field-error">{validationErrors.name}</span>}
           </div>
           <div className="form-group">
             <label>Avatar URL</label>
@@ -123,7 +91,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
               placeholder="Enter avatar URL (optional)"
               disabled={loading}
             />
-            {validationErrors.avatar && <span className="field-error">{validationErrors.avatar}</span>}
           </div>
           <div className="form-group">
             <label>Email *</label>
@@ -134,7 +101,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
               placeholder="Enter your email"
               disabled={loading}
             />
-            {validationErrors.email && <span className="field-error">{validationErrors.email}</span>}
           </div>
           <div className="form-group">
             <label>Password *</label>
@@ -145,7 +111,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
               placeholder="Enter your password"
               disabled={loading}
             />
-            {validationErrors.password && <span className="field-error">{validationErrors.password}</span>}
           </div>
           <div className="form-group">
             <label>Confirm Password *</label>
@@ -156,7 +121,6 @@ const RegisterModal = ({ isOpen, onClose, onRegister }) => {
               placeholder="Confirm your password"
               disabled={loading}
             />
-            {validationErrors.confirmPassword && <span className="field-error">{validationErrors.confirmPassword}</span>}
           </div>
           {error && <div className="error-message">{error}</div>}
           <button type="submit" disabled={loading} className="submit-btn">

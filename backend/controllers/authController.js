@@ -2,12 +2,12 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'your_jwt_secret_key', {
     expiresIn: '7d'
   });
 };
 
-exports.register = async (req, res) => {
+exports.signup = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
 
@@ -39,7 +39,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.signin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -85,8 +85,7 @@ exports.getCurrentUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
-        likedClothes: user.likedClothes
+        avatar: user.avatar
       }
     });
   } catch (error) {

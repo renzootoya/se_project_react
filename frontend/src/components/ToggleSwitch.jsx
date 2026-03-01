@@ -20,7 +20,6 @@ const ToggleSwitch = ({ isOn, onChange, label }) => {
         onClick={handleToggle}
         type="button"
         aria-pressed={isActive}
-        title="Toggle"
       >
         <span className="toggle-slider" />
       </button>

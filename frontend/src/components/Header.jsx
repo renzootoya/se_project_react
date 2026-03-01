@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
-import ToggleSwitch from './ToggleSwitch';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Header.css';
 
 const Header = ({
@@ -11,77 +11,45 @@ const Header = ({
   onLogout,
   onShowRegister,
   onShowLogin,
-  onShowAddItem,
   showRegisterModal,
   setShowRegisterModal,
   showLoginModal,
   setShowLoginModal,
   onRegister,
-  onLogin,
-  onToggleSidebar
+  onLogin
 }) => {
   const navigate = useNavigate();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { currentUser: contextUser } = useContext(CurrentUserContext);
+  const user = currentUser || contextUser;
 
   const getAvatarPlaceholder = () => {
-    if (!currentUser?.name) return '?';
-    return currentUser.name.charAt(0).toUpperCase();
+    if (!user?.name) return '?';
+    return user.name.charAt(0).toUpperCase();
   };
 
-  const handleEditProfile = () => {
-    navigate('/profile');
-  };
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      onLogout();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      setIsLoggingOut(false);
-    }
+  const handleLogout = () => {
+    onLogout();
+    navigate('/');
   };
 
   return (
     <>
       <header className="header">
         <div className="header-container">
-          <button 
-            className="menu-toggle"
-            onClick={onToggleSidebar}
-            aria-label="Toggle menu"
-          >
-            ☰
-          </button>
           <Link to="/" className="logo">
             WTWR
           </Link>
           <nav className="nav">
-            {isLoggedIn && currentUser ? (
+            {isLoggedIn && user ? (
               <>
-                <button 
-                  onClick={onShowAddItem} 
-                  className="add-item-btn"
-                  disabled={isLoggingOut}
-                >
-                  + Add Item
-                </button>
-                <Link to="/profile" className="profile-link">
+                <button onClick={() => navigate('/profile')} className="nav-link">
                   Profile
-                </Link>
-                <ToggleSwitch 
-                  isOn={darkMode} 
-                  onChange={setDarkMode}
-                  label="🌙"
-                />
+                </button>
                 <div className="user-section">
-                  {currentUser.avatar ? (
+                  {user.avatar ? (
                     <img 
-                      src={currentUser.avatar} 
-                      alt={currentUser.name} 
+                      src={user.avatar} 
+                      alt={user.name} 
                       className="avatar-img"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -92,26 +60,15 @@ const Header = ({
                   <div 
                     className="avatar-placeholder"
                     style={{
-                      display: currentUser.avatar ? 'none' : 'flex'
+                      display: user.avatar ? 'none' : 'flex'
                     }}
                   >
                     {getAvatarPlaceholder()}
                   </div>
-                  <span className="user-name">{currentUser.name}</span>
+                  <span className="user-name">{user.name}</span>
                 </div>
-                <button 
-                  onClick={handleEditProfile} 
-                  className="edit-profile-btn"
-                  disabled={isLoggingOut}
-                >
-                  Edit Profile
-                </button>
-                <button 
-                  onClick={handleLogout} 
-                  className="logout-btn"
-                  disabled={isLoggingOut}
-                >
-                  {isLoggingOut ? 'Signing Out...' : 'Sign Out'}
+                <button onClick={handleLogout} className="auth-btn logout-btn">
+                  Sign Out
                 </button>
               </>
             ) : (

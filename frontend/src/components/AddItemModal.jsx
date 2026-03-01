@@ -1,37 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Modal.css';
 
-const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
+const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
   const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [weather, setWeather] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
+  const { isLoggedIn } = useContext(CurrentUserContext);
 
   const weatherOptions = ['Hot', 'Warm', 'Cool', 'Cold'];
-
-  const validateForm = () => {
-    const errors = {};
-
-    if (!name.trim()) {
-      errors.name = 'Item name is required';
-    } else if (name.trim().length < 2) {
-      errors.name = 'Item name must be at least 2 characters';
-    }
-
-    if (!imageUrl.trim()) {
-      errors.imageUrl = 'Image URL is required';
-    } else if (!/^https?:\/\/.+/.test(imageUrl)) {
-      errors.imageUrl = 'Image URL must be a valid URL';
-    }
-
-    if (weather.length === 0) {
-      errors.weather = 'Select at least one weather type';
-    }
-
-    return errors;
-  };
 
   const handleWeatherToggle = (w) => {
     setWeather(prev =>
@@ -42,12 +21,10 @@ const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setValidationErrors({});
     setLoading(true);
 
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
+    if (!name.trim() || !imageUrl.trim() || weather.length === 0) {
+      setError('Please fill in all required fields');
       setLoading(false);
       return;
     }
@@ -68,7 +45,6 @@ const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
     setImageUrl('');
     setWeather([]);
     setError('');
-    setValidationErrors({});
   };
 
   const handleClose = () => {
@@ -106,7 +82,6 @@ const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
               placeholder="Enter item name"
               disabled={loading}
             />
-            {validationErrors.name && <span className="field-error">{validationErrors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -118,7 +93,6 @@ const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
               placeholder="Enter image URL"
               disabled={loading}
             />
-            {validationErrors.imageUrl && <span className="field-error">{validationErrors.imageUrl}</span>}
           </div>
 
           {imageUrl && (
@@ -149,7 +123,6 @@ const AddItemModal = ({ isOpen, onClose, onAddItem, isLoggedIn }) => {
                 </label>
               ))}
             </div>
-            {validationErrors.weather && <span className="field-error">{validationErrors.weather}</span>}
           </div>
 
           {error && <div className="error-message">{error}</div>}

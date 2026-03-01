@@ -1,4 +1,7 @@
 import React from 'react';
-export default function ModalWithForm() {
-  return <div>ModalWithForm</div>;
-}
+
+const ModalWithForm = ({ children }) => {
+  return <>{children}</>;
+};
+
+export default ModalWithForm;
