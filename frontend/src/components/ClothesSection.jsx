@@ -4,7 +4,7 @@ import './ClothesSection.css';
 
 const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, currentUser, onDelete }) => {
   const userClothes = clothingItems.filter(item => 
-    item.owner === currentUser?._id
+    item.owner === currentUser?._id || item.owner?._id === currentUser?._id
   );
 
   if (userClothes.length === 0) {

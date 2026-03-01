@@ -6,8 +6,8 @@ const ItemModal = ({ isOpen, onClose, item, currentUser, onDelete, onLike }) => 
   const [isLiking, setIsLiking] = useState(false);
   const [error, setError] = useState('');
 
-  const isOwner = currentUser?._id === item?.owner;
-  const isLiked = item?.likes && item.likes.some(id => id === currentUser?._id);
+  const isOwner = currentUser?._id === item?.owner?._id || currentUser?._id === item?.owner;
+  const isLiked = item?.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
 
   const handleDelete = async () => {
     if (!isOwner || !item) return;
@@ -35,7 +35,7 @@ const ItemModal = ({ isOpen, onClose, item, currentUser, onDelete, onLike }) => 
     setIsLiking(true);
     setError('');
     try {
-      await onLike({ id: item._id, isLiked });
+      await onLike({ clothingId: item._id, isLiked });
     } catch (err) {
       setError(err.message || 'Failed to update like status');
     } finally {

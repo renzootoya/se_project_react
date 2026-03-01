@@ -4,8 +4,8 @@ import './ItemCard.css';
 
 const ItemCard = ({ item, onCardLike, isLoggedIn, currentUser, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isLiked = item.likes && item.likes.some(id => id === currentUser?._id);
-  const isOwner = currentUser?._id === item.owner;
+  const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
+  const isOwner = currentUser?._id === item.owner?._id || currentUser?._id === item.owner;
 
   const handleCardClick = () => {
     setIsModalOpen(true);
