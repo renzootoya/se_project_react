@@ -5,43 +5,7 @@ exports.getClothing = async (req, res) => {
     const clothing = await Clothing.find().populate('owner', 'name avatar').populate('likes', '_id');
     res.status(200).json({ data: clothing });
   } catch (error) {
-    console.error('Error fetching clothing:', error);
-    // Return sample data if database is not available
-    const sampleData = [
-      {
-        _id: '1',
-        name: 'T-Shirt',
-        imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
-        weather: ['hot', 'warm'],
-        owner: { _id: '0', name: 'Admin', avatar: '' },
-        likes: []
-      },
-      {
-        _id: '2',
-        name: 'Jeans',
-        imageUrl: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400',
-        weather: ['warm', 'cool'],
-        owner: { _id: '0', name: 'Admin', avatar: '' },
-        likes: []
-      },
-      {
-        _id: '3',
-        name: 'Sweater',
-        imageUrl: 'https://images.unsplash.com/photo-1556821552-5ff63b1b5786?w=400',
-        weather: ['cool', 'cold'],
-        owner: { _id: '0', name: 'Admin', avatar: '' },
-        likes: []
-      },
-      {
-        _id: '4',
-        name: 'Winter Coat',
-        imageUrl: 'https://images.unsplash.com/photo-1539533057440-7814a9d790ff?w=400',
-        weather: ['cold'],
-        owner: { _id: '0', name: 'Admin', avatar: '' },
-        likes: []
-      }
-    ];
-    res.status(200).json({ data: sampleData });
+    res.status(500).json({ message: error.message });
   }
 };
 
