@@ -9,6 +9,7 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
 
   useEffect(() => {
     fetchClothing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchClothing = async () => {
