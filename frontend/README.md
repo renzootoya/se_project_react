@@ -1,62 +1,16 @@
-# WTWR Frontend
+# WTWR - What to Wear Right Now
 
-React frontend for the WTWR (What to Wear Right Now) application.
+A full-stack React + Express + MongoDB application.
 
-## 🚀 Getting Started
+## 🔗 Backend Repository
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+**Backend API:** https://github.com/renzootoya/se_project_react
 
-### Installation
+The backend is built with Express.js and MongoDB. Make sure to clone and run the backend server on port 3000 before running the frontend.
 
-1. Install dependencies:
-```bash
-npm install
-```
+[Backend Code - se_project_backend](https://github.com/renzootoya/se_project_backend)
 
-2. Create `.env` file:
-```
-REACT_APP_API=http://localhost:3000/api
-```
 
-3. Start the development server:
-```bash
-npm start
-```
-
-The app will run on `http://localhost:3001`
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── Header.jsx          - Navigation header with auth buttons
-│   ├── Header.css
-│   ├── Main.jsx            - Home page with clothing grid
-│   ├── Main.css
-│   ├── ItemCard.jsx        - Individual clothing item card
-│   ├── ItemCard.css
-│   ├── Footer.jsx          - Footer component
-│   ├── Footer.css
-│   ├── LoginModal.jsx      - Login form modal
-│   ├── RegisterModal.jsx   - Registration form modal
-│   ├── Modal.css           - Shared modal styles
-│   ├── ProtectedRoute.jsx  - Route protection wrapper
-│   └── ToggleSwitch.jsx    - Toggle switch component
-├── pages/
-│   ├── Profile.jsx         - User profile page
-│   └── Profile.css
-├── contexts/
-│   └── CurrentUserContext.jsx - User context provider
-├── utils/
-│   └── auth.js             - Authentication utilities
-├── App.jsx                 - Main app component
-├── App.css
-├── index.js                - React entry point
-└── index.css
-```
 
 ## 🎯 Key Features
 
