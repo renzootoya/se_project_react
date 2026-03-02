@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signup } from '../utils/api';
 import './Modal.css';
 
-const RegisterModal = ({ onClose, onSubmit }) => {
+const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
@@ -30,7 +30,6 @@ const RegisterModal = ({ onClose, onSubmit }) => {
 
     try {
       const response = await signup(name, avatar, email, password);
-      console.log('Signup response:', response);
 
       if (response.message && !response.token) {
         setError(response.message);
@@ -48,7 +47,6 @@ const RegisterModal = ({ onClose, onSubmit }) => {
         setLoading(false);
       }
     } catch (err) {
-      console.error('Signup error:', err);
       setError(err.message || 'Registration failed');
       setLoading(false);
     }
@@ -67,6 +65,8 @@ const RegisterModal = ({ onClose, onSubmit }) => {
     resetForm();
     onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signin } from '../utils/api';
 import './Modal.css';
 
-const LoginModal = ({ onClose, onSubmit }) => {
+const LoginModal = ({ onClose, onSubmit, isOpen }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +21,6 @@ const LoginModal = ({ onClose, onSubmit }) => {
 
     try {
       const response = await signin(email, password);
-      console.log('Signin response:', response);
 
       if (response.message && !response.token) {
         setError(response.message);
@@ -39,7 +38,6 @@ const LoginModal = ({ onClose, onSubmit }) => {
         setLoading(false);
       }
     } catch (err) {
-      console.error('Signin error:', err);
       setError(err.message || 'Login failed');
       setLoading(false);
     }
@@ -55,6 +53,8 @@ const LoginModal = ({ onClose, onSubmit }) => {
     resetForm();
     onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
