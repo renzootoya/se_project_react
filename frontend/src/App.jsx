@@ -29,7 +29,8 @@ function App() {
             localStorage.removeItem('jwt');
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error('Token check failed:', err);
           localStorage.removeItem('jwt');
         })
         .finally(() => {
@@ -43,7 +44,10 @@ function App() {
       .then((data) => {
         setClothingItems(data.data || []);
       })
-      .catch((err) => console.error('Error loading items:', err));
+      .catch((err) => {
+        console.error('Error loading items:', err);
+        setClothingItems([]);
+      });
   }, []);
 
   const handleRegister = (user) => {
