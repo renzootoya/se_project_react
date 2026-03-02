@@ -30,6 +30,7 @@ const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
 
     try {
       const response = await signup(name, avatar, email, password);
+      console.log('Signup response:', response);
 
       if (response.message && !response.token) {
         setError(response.message);
@@ -47,6 +48,7 @@ const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
         setLoading(false);
       }
     } catch (err) {
+      console.error('Signup error:', err);
       setError(err.message || 'Registration failed');
       setLoading(false);
     }

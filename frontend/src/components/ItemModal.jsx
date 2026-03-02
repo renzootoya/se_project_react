@@ -22,16 +22,11 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
       setIsDeleting(true);
       setError('');
       try {
-        const token = localStorage.getItem('jwt');
-        if (!token) {
-          setError('No authentication token found');
-          setIsDeleting(false);
-          return;
-        }
-        await deleteItem(token, item._id);
+        await onDelete(item._id);
         onClose();
       } catch (err) {
         setError(err.message || 'Failed to delete item');
+      } finally {
         setIsDeleting(false);
       }
     }

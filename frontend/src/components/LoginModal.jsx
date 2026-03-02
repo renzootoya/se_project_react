@@ -21,7 +21,6 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
 
     try {
       const response = await signin(email, password);
-      console.log('Signin response:', response);
 
       if (response.message && !response.token) {
         setError(response.message);
@@ -39,7 +38,6 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
         setLoading(false);
       }
     } catch (err) {
-      console.error('Signin error:', err);
       setError(err.message || 'Login failed');
       setLoading(false);
     }

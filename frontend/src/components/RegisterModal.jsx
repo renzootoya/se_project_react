@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { signin } from '../utils/api';
+import { signup } from '../utils/api';
 import './Modal.css';
 
-const LoginModal = ({ onClose, onSubmit, isOpen }) => {
+const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
+  const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -13,15 +16,20 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
     setError('');
     setLoading(true);
 
-    if (!email.trim() || !password) {
-      setError('Please fill in all fields');
+    if (!name.trim() || !email.trim() || !password) {
+      setError('Please fill in all required fields');
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await signin(email, password);
-      console.log('Signin response:', response);
+      const response = await signup(name, avatar, email, password);
 
       if (response.message && !response.token) {
         setError(response.message);
@@ -35,19 +43,21 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
         onSubmit(response.user);
         onClose();
       } else {
-        setError('Login failed - invalid response');
+        setError('Registration failed - invalid response');
         setLoading(false);
       }
     } catch (err) {
-      console.error('Signin error:', err);
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Registration failed');
       setLoading(false);
     }
   };
 
   const resetForm = () => {
+    setName('');
+    setAvatar('');
     setEmail('');
     setPassword('');
+    setConfirmPassword('');
     setError('');
   };
 
@@ -62,8 +72,28 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
     <div className="modal-overlay" onClick={handleClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={handleClose}>×</button>
-        <h2>Log In</h2>
+        <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Name *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+              disabled={loading}
+            />
+          </div>
+          <div className="form-group">
+            <label>Avatar URL</label>
+            <input
+              type="url"
+              value={avatar}
+              onChange={(e) => setAvatar(e.target.value)}
+              placeholder="Enter avatar URL (optional)"
+              disabled={loading}
+            />
+          </div>
           <div className="form-group">
             <label>Email *</label>
             <input
@@ -84,9 +114,19 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
               disabled={loading}
             />
           </div>
+          <div className="form-group">
+            <label>Confirm Password *</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+              disabled={loading}
+            />
+          </div>
           {error && <div className="error-message">{error}</div>}
           <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
       </div>
@@ -94,4 +134,4 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
   );
 };
 
-export default LoginModal;
+export default RegisterModal;
