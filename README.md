@@ -10,76 +10,7 @@ A full-stack React + Express + MongoDB application for managing clothing items a
 
 **Backend Repository:** https://github.com/renzootoya/se_project_backend
 
-### Option 1: Run Locally (Recommended for Testing)
-
-**Step 1: Start Backend Server**
-```bash
-cd backend
-npm install
-npm run dev
-# Backend runs on http://localhost:3000
-```
-
-**Step 2: Start Frontend Server (in new terminal)**
-```bash
-cd frontend
-npm install
-npm start
-# Frontend runs on http://localhost:3001
-```
-
-**Step 3: Open in Browser**
-```
-http://localhost:3001
-```
-
-### Option 2: Deploy Everything to Railway (Recommended)
-
-Railway will automatically build and serve both frontend and backend from a single application.
-
-**IMPORTANT: Before Deploying, You Need MongoDB**
-
-1. **Create a MongoDB Atlas account** (free tier available):
-   - Go to https://www.mongodb.com/cloud/atlas
-   - Sign up for free
-   - Create a cluster (M0 free tier)
-   - Create a database user with username and password
-   - Get your connection string (looks like: `mongodb+srv://username:password@cluster.mongodb.net/wtwr?retryWrites=true&w=majority`)
-
-**Steps to Deploy on Railway:**
-
-1. **Go to https://railway.app** and sign in with GitHub
-2. **Click "New Project"** → **"Deploy from GitHub"**
-3. **Select the `se_project_react` repository**
-4. **Railway will automatically start building**
-   - It will build the frontend (`npm run build:all`)
-   - It will start the backend server which serves both API and static files
-5. **CRITICAL: Add Environment Variables** in Railway dashboard:
-   - Click on the "web" service
-   - Go to **Variables** tab
-   - Add these variables:
-     - `MONGODB_URI`: Your MongoDB connection string from Atlas
-     - `JWT_SECRET`: Any random string (e.g., `your_secret_key_12345`)
-     - `NODE_ENV`: `production`
-6. **Click "Deploy"** or wait for auto-redeploy
-7. **Wait for deployment to complete** (takes 2-5 minutes)
-8. **Railway will show your live URL** (e.g., `https://web-production-xxxx.up.railway.app`)
-
-**How it works:**
-- Frontend is built and placed in `frontend/build`
-- Backend server (`server.js`) serves both:
-  - API routes at `/api/*`
-  - Static frontend files at `/`
-  - React Router catch-all for SPA navigation
-
-**Your app will be live at:** `https://your-railway-url.up.railway.app`
-
-**Troubleshooting:**
-- If nothing is clickable: Check that `MONGODB_URI` is set in Railway Variables
-- If you see "Site not found": Wait a few more minutes for deployment to complete
-- If login doesn't work: Verify `JWT_SECRET` is set
-
-> **For Tutor:** After deployment with MongoDB configured, the app will be fully functional!
+The app is deployed on Railway and fully functional with MongoDB connected.
 
 ## 🚀 Features
 
