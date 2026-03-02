@@ -4,13 +4,34 @@ A full-stack React + Express + MongoDB application for managing clothing items a
 
 ## 🚀 Live Deployment
 
-**Frontend Live:** https://wtwr-renzo.netlify.app/
-
 **GitHub Repository:** https://github.com/renzootoya/se_project_react
 
 **Backend Repository:** https://github.com/renzootoya/se_project_backend
 
-> **For Tutor:** Click the link above to see the working application!
+### To Run the Application Locally:
+
+**Step 1: Start Backend Server**
+```bash
+cd backend
+npm install
+npm run dev
+# Backend runs on http://localhost:3000
+```
+
+**Step 2: Start Frontend Server**
+```bash
+cd frontend
+npm install
+npm start
+# Frontend runs on http://localhost:3001
+```
+
+**Step 3: Open in Browser**
+```
+http://localhost:3001
+```
+
+> **For Tutor:** Run the commands above to see the working application locally!
 
 ## 🚀 Features
 
