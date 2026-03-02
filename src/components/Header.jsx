@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import ToggleSwitch from './ToggleSwitch';
 
 const Header = ({
   isLoggedIn,
@@ -32,11 +33,12 @@ const Header = ({
             WTWR
           </Link>
           <nav className="nav">
+            <ToggleSwitch />
             {isLoggedIn && user ? (
               <>
-                <button onClick={() => navigate('/profile')} className="nav-link">
+                <Link to="/profile" className="nav-link">
                   Profile
-                </button>
+                </Link>
                 <div className="user-section">
                   {user.avatar ? (
                     <img 

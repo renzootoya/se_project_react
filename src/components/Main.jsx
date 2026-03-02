@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ItemCard from './ItemCard';
+import WeatherCard from './WeatherCard';
 import { getItems } from '../utils/api';
 import './Main.css';
 
@@ -26,6 +27,8 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
   return (
     <main className="main-container">
       <h1>Today's Outfit</h1>
+      
+      <WeatherCard />
       
       <section className="weather-section">
         <h2>Weather Guide</h2>
