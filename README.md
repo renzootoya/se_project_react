@@ -8,7 +8,7 @@ A full-stack React + Express + MongoDB application for managing clothing items a
 
 **Backend Repository:** https://github.com/renzootoya/se_project_backend
 
-### To Run the Application Locally:
+### Option 1: Run Locally (Recommended for Testing)
 
 **Step 1: Start Backend Server**
 ```bash
@@ -18,7 +18,7 @@ npm run dev
 # Backend runs on http://localhost:3000
 ```
 
-**Step 2: Start Frontend Server**
+**Step 2: Start Frontend Server (in new terminal)**
 ```bash
 cd frontend
 npm install
@@ -31,7 +31,40 @@ npm start
 http://localhost:3001
 ```
 
-> **For Tutor:** Run the commands above to see the working application locally!
+### Option 2: Deploy to Railway (Backend) + Netlify (Frontend)
+
+**Backend Deployment on Railway:**
+
+1. Go to https://railway.app
+2. Click "New Project" → "Deploy from GitHub"
+3. Select the `se_project_react` repository
+4. In Railway dashboard, go to Settings → Root Directory
+5. Set root directory to: `backend`
+6. Add environment variables:
+   - `MONGODB_URI`: Your MongoDB connection string
+   - `JWT_SECRET`: Your JWT secret key
+   - `PORT`: 3000
+7. Deploy
+
+**Get Backend URL from Railway:**
+- After deployment, Railway will show your backend URL (e.g., `https://your-backend.railway.app`)
+
+**Frontend Deployment on Netlify:**
+
+1. Create `.env.production` in frontend folder:
+```
+REACT_APP_API=https://your-backend.railway.app/api
+```
+
+2. Push to GitHub
+3. Go to https://netlify.com
+4. Click "New site from Git"
+5. Select the repository
+6. Build command: `npm run build`
+7. Publish directory: `build`
+8. Deploy
+
+> **For Tutor:** Run the local commands above to see the working application!
 
 ## 🚀 Features
 
