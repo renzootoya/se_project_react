@@ -25,8 +25,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes);
 app.use('/api/clothing', clothingRoutes);
 
-// Serve static files from frontend build
-const frontendBuildPath = path.join(__dirname, '../frontend/build');
+// Serve static files from root build folder
+const frontendBuildPath = path.join(__dirname, '../build');
 app.use(express.static(frontendBuildPath));
 
 // Catch-all handler for React Router
