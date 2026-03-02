@@ -1,10 +1,16 @@
 # WTWR - What to Wear Right Now
 
-A full-stack React + Express + MongoDB application.
+A full-stack React + Express + MongoDB application for managing clothing items and getting outfit recommendations.
 
-## 🔗 Backend Repository
+## � Live Deployment
 
-**Backend API:** https://github.com/renzootoya/se_project_react
+**Frontend Live:** https://wtwr-renzo.netlify.app/
+
+**GitHub Repository:** https://github.com/renzootoya/se_project_react
+
+## �🔗 Backend Repository
+
+**Backend API:** https://github.com/renzootoya/se_project_backend
 
 The backend is built with Express.js and MongoDB. Make sure to clone and run the backend server on port 3000 before running the frontend.
 
