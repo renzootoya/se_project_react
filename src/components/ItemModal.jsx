@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { deleteItem } from '../utils/api';
+import './ItemModal.css';
 import './Modal.css';
 
 const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
