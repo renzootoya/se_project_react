@@ -21,19 +21,25 @@ const LoginModal = ({ onClose, onSubmit }) => {
 
     try {
       const response = await signin(email, password);
+      console.log('Signin response:', response);
 
-      if (response.error) {
-        setError(response.error);
+      if (response.message && !response.token) {
+        setError(response.message);
         setLoading(false);
         return;
       }
 
-      if (response.token) {
+      if (response.token && response.user) {
         localStorage.setItem('jwt', response.token);
-        onSubmit(response.user);
         resetForm();
+        onSubmit(response.user);
+        onClose();
+      } else {
+        setError('Login failed - invalid response');
+        setLoading(false);
       }
     } catch (err) {
+      console.error('Signin error:', err);
       setError(err.message || 'Login failed');
       setLoading(false);
     }

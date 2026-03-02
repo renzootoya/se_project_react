@@ -30,19 +30,25 @@ const RegisterModal = ({ onClose, onSubmit }) => {
 
     try {
       const response = await signup(name, avatar, email, password);
+      console.log('Signup response:', response);
 
-      if (response.error) {
-        setError(response.error);
+      if (response.message && !response.token) {
+        setError(response.message);
         setLoading(false);
         return;
       }
 
-      if (response.token) {
+      if (response.token && response.user) {
         localStorage.setItem('jwt', response.token);
-        onSubmit(response.user);
         resetForm();
+        onSubmit(response.user);
+        onClose();
+      } else {
+        setError('Registration failed - invalid response');
+        setLoading(false);
       }
     } catch (err) {
+      console.error('Signup error:', err);
       setError(err.message || 'Registration failed');
       setLoading(false);
     }
