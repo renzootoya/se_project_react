@@ -1,0 +1,20 @@
+{
+  "name": "wtwr-fullstack",
+  "version": "1.0.0",
+  "description": "WTWR - Full Stack Application",
+  "main": "backend/app.js",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:all": "cd frontend && npm run build",
+    "start:prod": "cd backend && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
