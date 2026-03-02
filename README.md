@@ -31,40 +31,36 @@ npm start
 http://localhost:3001
 ```
 
-### Option 2: Deploy to Railway (Backend) + Netlify (Frontend)
+### Option 2: Deploy Everything to Railway (Recommended)
 
-**Backend Deployment on Railway:**
+Railway will automatically build and serve both frontend and backend from a single application.
 
-1. Go to https://railway.app
-2. Click "New Project" → "Deploy from GitHub"
-3. Select the `se_project_react` repository
-4. In Railway dashboard, go to Settings → Root Directory
-5. Set root directory to: `backend`
-6. Add environment variables:
-   - `MONGODB_URI`: Your MongoDB connection string
-   - `JWT_SECRET`: Your JWT secret key
-   - `PORT`: 3000
-7. Deploy
+**Steps to Deploy on Railway:**
 
-**Get Backend URL from Railway:**
-- After deployment, Railway will show your backend URL (e.g., `https://your-backend.railway.app`)
+1. **Go to https://railway.app** and sign in
+2. **Click "New Project"** → **"Deploy from GitHub"**
+3. **Select the `se_project_react` repository**
+4. **Railway will automatically detect and deploy**
+   - It will build the frontend (`npm run build:all`)
+   - It will start the backend server which serves both API and static files
+5. **Add Environment Variables** in Railway dashboard:
+   - `MONGODB_URI`: Your MongoDB connection string (e.g., `mongodb+srv://user:pass@cluster.mongodb.net/wtwr`)
+   - `JWT_SECRET`: Your JWT secret key (any string you choose)
+   - `NODE_ENV`: `production`
+6. **Click "Deploy"**
+7. **Wait for deployment to complete** (takes 2-5 minutes)
+8. **Railway will show your live URL** (e.g., `https://wtwr-production.railway.app`)
 
-**Frontend Deployment on Netlify:**
+**How it works:**
+- Frontend is built and placed in `frontend/build`
+- Backend server (`server.js`) serves both:
+  - API routes at `/api/*`
+  - Static frontend files at `/`
+  - React Router catch-all for SPA navigation
 
-1. Create `.env.production` in frontend folder:
-```
-REACT_APP_API=https://your-backend.railway.app/api
-```
+**Your app will be live at:** `https://your-railway-url.railway.app`
 
-2. Push to GitHub
-3. Go to https://netlify.com
-4. Click "New site from Git"
-5. Select the repository
-6. Build command: `npm run build`
-7. Publish directory: `build`
-8. Deploy
-
-> **For Tutor:** Run the local commands above to see the working application!
+> **For Tutor:** After deployment, click the Railway URL to see the working application!
 
 ## 🚀 Features
 
