@@ -2,6 +2,16 @@
 
 A full-stack React + Express + MongoDB application for managing clothing items and getting outfit recommendations based on weather.
 
+## 🚀 Live Deployment
+
+**Frontend Live:** https://wtwr-renzo.netlify.app/
+
+**GitHub Repository:** https://github.com/renzootoya/se_project_react
+
+**Backend Repository:** https://github.com/renzootoya/se_project_backend
+
+> **For Tutor:** Click the link above to see the working application!
+
 ## 🚀 Features
 
 - **User Authentication**: Register and login with JWT tokens
