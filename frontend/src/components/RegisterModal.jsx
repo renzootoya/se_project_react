@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signup } from '../utils/api';
-import './Modal.css';
+import ModalWithForm from '../hooks/ModalWithForm';
 
 const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
   const [name, setName] = useState('');
@@ -68,71 +68,67 @@ const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={handleClose}>×</button>
-        <h2>Sign Up</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Avatar URL</label>
-            <input
-              type="url"
-              value={avatar}
-              onChange={(e) => setAvatar(e.target.value)}
-              placeholder="Enter avatar URL (optional)"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Email *</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Password *</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Confirm Password *</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              disabled={loading}
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Signing up...' : 'Sign Up'}
-          </button>
-        </form>
+    <ModalWithForm
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Sign Up"
+      onSubmit={handleSubmit}
+      submitButtonText="Sign Up"
+      loading={loading}
+      error={error}
+    >
+      <div className="form-group">
+        <label>Name *</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          disabled={loading}
+        />
       </div>
-    </div>
+      <div className="form-group">
+        <label>Avatar URL</label>
+        <input
+          type="url"
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
+          placeholder="Enter avatar URL (optional)"
+          disabled={loading}
+        />
+      </div>
+      <div className="form-group">
+        <label>Email *</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          disabled={loading}
+        />
+      </div>
+      <div className="form-group">
+        <label>Password *</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          disabled={loading}
+        />
+      </div>
+      <div className="form-group">
+        <label>Confirm Password *</label>
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm your password"
+          disabled={loading}
+        />
+      </div>
+    </ModalWithForm>
   );
 };
 

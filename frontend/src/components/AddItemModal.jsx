@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import './Modal.css';
+import ModalWithForm from '../hooks/ModalWithForm';
 
 const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
   const [name, setName] = useState('');
@@ -52,9 +52,7 @@ const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
-
-  if (!isLoggedIn) {
+  if (!isLoggedIn && isOpen) {
     return (
       <div className="modal-overlay" onClick={handleClose}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -68,76 +66,67 @@ const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
   }
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={handleClose}>×</button>
-        <h2>Add New Item</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Item Name *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter item name"
-              disabled={loading}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Image URL *</label>
-            <input
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="Enter image URL"
-              disabled={loading}
-            />
-          </div>
-
-          {imageUrl && (
-            <div className="avatar-preview">
-              <img
-                src={imageUrl}
-                alt="Item Preview"
-                className="preview-img"
-                onError={(e) => {
-                  e.target.alt = 'Invalid URL';
-                }}
-              />
-            </div>
-          )}
-
-          <div className="form-group">
-            <label>Weather Types *</label>
-            <div className="weather-options">
-              {weatherOptions.map(w => (
-                <label key={w} className="weather-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={weather.includes(w)}
-                    onChange={() => handleWeatherToggle(w)}
-                    disabled={loading}
-                  />
-                  {w}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="form-actions">
-            <button type="submit" disabled={loading} className="submit-btn">
-              {loading ? 'Adding...' : 'Add Item'}
-            </button>
-            <button type="button" onClick={handleClose} disabled={loading} className="cancel-btn">
-              Cancel
-            </button>
-          </div>
-        </form>
+    <ModalWithForm
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Add New Item"
+      onSubmit={handleSubmit}
+      submitButtonText="Add Item"
+      loading={loading}
+      error={error}
+    >
+      <div className="form-group">
+        <label>Item Name *</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter item name"
+          disabled={loading}
+        />
       </div>
-    </div>
+
+      <div className="form-group">
+        <label>Image URL *</label>
+        <input
+          type="url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="Enter image URL"
+          disabled={loading}
+        />
+      </div>
+
+      {imageUrl && (
+        <div className="avatar-preview">
+          <img
+            src={imageUrl}
+            alt="Item Preview"
+            className="preview-img"
+            onError={(e) => {
+              e.target.alt = 'Invalid URL';
+            }}
+          />
+        </div>
+      )}
+
+      <div className="form-group">
+        <label>Weather Types *</label>
+        <div className="weather-options">
+          {weatherOptions.map(w => (
+            <label key={w} className="weather-checkbox">
+              <input
+                type="checkbox"
+                checked={weather.includes(w)}
+                onChange={() => handleWeatherToggle(w)}
+                disabled={loading}
+              />
+              {w}
+            </label>
+          ))}
+        </div>
+      </div>
+    </ModalWithForm>
   );
 };
 

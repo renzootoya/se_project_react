@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signin } from '../utils/api';
-import './Modal.css';
+import ModalWithForm from '../hooks/ModalWithForm';
 
 const LoginModal = ({ onClose, onSubmit, isOpen }) => {
   const [email, setEmail] = useState('');
@@ -56,41 +56,37 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={handleClose}>×</button>
-        <h2>Log In</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email *</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Password *</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              disabled={loading}
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Logging in...' : 'Log In'}
-          </button>
-        </form>
+    <ModalWithForm
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Log In"
+      onSubmit={handleSubmit}
+      submitButtonText="Log In"
+      loading={loading}
+      error={error}
+    >
+      <div className="form-group">
+        <label>Email *</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          disabled={loading}
+        />
       </div>
-    </div>
+      <div className="form-group">
+        <label>Password *</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          disabled={loading}
+        />
+      </div>
+    </ModalWithForm>
   );
 };
 

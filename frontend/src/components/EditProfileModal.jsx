@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { updateUser } from '../utils/api';
-import './Modal.css';
+import ModalWithForm from '../hooks/ModalWithForm';
 
 const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
   const [name, setName] = useState('');
@@ -67,59 +67,50 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay" onClick={handleCancel}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={handleCancel}>×</button>
-        <h2>Edit Profile</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label>Avatar URL</label>
-            <input
-              type="url"
-              value={avatar}
-              onChange={(e) => setAvatar(e.target.value)}
-              placeholder="Enter avatar URL (optional)"
-              disabled={loading}
-            />
-          </div>
-          {avatar && (
-            <div className="avatar-preview">
-              <img 
-                src={avatar} 
-                alt="Avatar Preview" 
-                className="preview-img"
-                onError={(e) => {
-                  e.target.alt = 'Invalid URL';
-                }}
-              />
-            </div>
-          )}
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
-          <div className="form-actions">
-            <button type="submit" disabled={loading} className="submit-btn">
-              {loading ? 'Saving...' : 'Save Changes'}
-            </button>
-            <button type="button" onClick={handleCancel} disabled={loading} className="cancel-btn">
-              Cancel
-            </button>
-          </div>
-        </form>
+    <ModalWithForm
+      isOpen={isOpen}
+      onClose={handleCancel}
+      title="Edit Profile"
+      onSubmit={handleSubmit}
+      submitButtonText="Save Changes"
+      loading={loading}
+      error={error}
+      success={success}
+    >
+      <div className="form-group">
+        <label>Name *</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          disabled={loading}
+        />
       </div>
-    </div>
+      <div className="form-group">
+        <label>Avatar URL</label>
+        <input
+          type="url"
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
+          placeholder="Enter avatar URL (optional)"
+          disabled={loading}
+        />
+      </div>
+      {avatar && (
+        <div className="avatar-preview">
+          <img 
+            src={avatar} 
+            alt="Avatar Preview" 
+            className="preview-img"
+            onError={(e) => {
+              e.target.alt = 'Invalid URL';
+            }}
+          />
+        </div>
+      )}
+    </ModalWithForm>
   );
 };
 
