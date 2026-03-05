@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.REACT_APP_API || '/api';
 
 const fetchWithTimeout = (url, options, timeout = 10000) => {
   return Promise.race([

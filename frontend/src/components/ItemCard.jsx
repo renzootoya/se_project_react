@@ -24,7 +24,7 @@ const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
 
     setIsLiking(true);
     try {
-      await onCardLike({ clothingId: item._id, isLiked });
+      await onCardLike(item._id, isLiked);
     } catch (err) {
       console.error('Failed to like/unlike item:', err);
     } finally {
