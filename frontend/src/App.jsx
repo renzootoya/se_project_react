@@ -8,7 +8,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterModal from './components/RegisterModal';
 import LoginModal from './components/LoginModal';
-import { checkToken, getItems } from './utils/api';
+import { checkToken, getItems, addCardLike, removeCardLike } from './utils/api';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -71,23 +71,16 @@ function App() {
   const handleCardLike = async (itemId, isLiked) => {
     try {
       const token = localStorage.getItem('jwt');
-      if (!token) {
-        alert('Please log in to like items');
-        return;
-      }
+      if (!token) return;
 
-      const { addCardLike, removeCardLike } = await import('./utils/api');
       const endpoint = isLiked ? removeCardLike : addCardLike;
-      
       const response = await endpoint(token, itemId);
-      
-      const updatedItems = clothingItems.map(item => {
-        if (item._id === itemId) {
-          return { ...item, likes: response.data?.likes || response.likes || item.likes };
-        }
-        return item;
-      });
-      setClothingItems(updatedItems);
+
+      if (response.data) {
+        setClothingItems((items) =>
+          items.map((item) => (item._id === itemId ? response.data : item))
+        );
+      }
     } catch (err) {
       console.error('Error updating like:', err);
     }

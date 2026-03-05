@@ -46,7 +46,7 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
     setIsLiking(true);
     setError('');
     try {
-      await onLike({ clothingId: item._id, isLiked });
+      await onLike(item._id, isLiked);
     } catch (err) {
       setError(err.message || 'Failed to update like status');
     } finally {

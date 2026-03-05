@@ -38,7 +38,6 @@ const ClothesSection = ({ clothingItems, onCardLike, isLoggedIn, onDelete }) => 
             item={item}
             onCardLike={onCardLike}
             isLoggedIn={isLoggedIn}
-            currentUser={currentUser}
             onDelete={onDelete}
           />
         ))}
