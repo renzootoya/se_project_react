@@ -135,8 +135,8 @@ function App() {
           </Routes>
         </div>
 
-        {activeModal === 'register' && <RegisterModal onClose={() => setActiveModal(null)} onSubmit={handleRegister} />}
-        {activeModal === 'login' && <LoginModal onClose={() => setActiveModal(null)} onSubmit={handleLogin} />}
+        {activeModal === 'register' && <RegisterModal isOpen={true} onClose={() => setActiveModal(null)} onSubmit={handleRegister} />}
+        {activeModal === 'login' && <LoginModal isOpen={true} onClose={() => setActiveModal(null)} onSubmit={handleLogin} />}
       </BrowserRouter>
     </CurrentUserContext.Provider>
   );
