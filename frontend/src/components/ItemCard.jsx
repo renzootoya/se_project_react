@@ -3,13 +3,12 @@ import ItemModal from './ItemModal';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './ItemCard.css';
 
-const ItemCard = ({ item, isLoggedIn, currentUser, onCardLike, onDelete }) => {
+const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const { currentUser: contextUser } = useContext(CurrentUserContext);
-  const user = currentUser || contextUser;
+  const { currentUser } = useContext(CurrentUserContext);
 
-  const isLiked = item.likes && item.likes.some(id => id._id === user?._id || id === user?._id);
+  const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
 
   const handleCardClick = () => {
     setIsModalOpen(true);

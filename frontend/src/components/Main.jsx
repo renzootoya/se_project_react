@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import ItemCard from './ItemCard';
 import WeatherCard from './WeatherCard';
 import { getItems } from '../utils/api';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Main.css';
 
 const Main = ({ isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
-  const { currentUser } = useContext(CurrentUserContext);
   const [loading, setLoading] = useState(true);
 
   const fetchClothing = async () => {
@@ -59,7 +57,6 @@ const Main = ({ isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
               key={item._id}
               item={item}
               isLoggedIn={isLoggedIn}
-              currentUser={currentUser}
               onCardLike={onCardLike}
             />
           ))}
