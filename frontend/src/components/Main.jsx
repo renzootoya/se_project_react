@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ItemCard from './ItemCard';
 import WeatherCard from './WeatherCard';
 import { getItems } from '../utils/api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './Main.css';
 
-const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
+const Main = ({ isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
+  const { currentUser } = useContext(CurrentUserContext);
   const [loading, setLoading] = useState(true);
 
   const fetchClothing = async () => {

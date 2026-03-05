@@ -116,7 +116,6 @@ function App() {
                   clothingItems={clothingItems} 
                   setClothingItems={setClothingItems}
                   isLoggedIn={isLoggedIn}
-                  currentUser={currentUser}
                   onCardLike={handleCardLike}
                 />
               } 
