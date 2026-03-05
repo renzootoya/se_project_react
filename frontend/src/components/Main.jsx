@@ -7,10 +7,6 @@ import './Main.css';
 const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchClothing();
-  }, []);
-
   const fetchClothing = async () => {
     try {
       const data = await getItems();
@@ -21,6 +17,11 @@ const Main = ({ currentUser, isLoggedIn, clothingItems, setClothingItems, onCard
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchClothing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return <div className="main-container"><p>Loading...</p></div>;
 

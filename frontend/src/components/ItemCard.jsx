@@ -10,7 +10,6 @@ const ItemCard = ({ item, isLoggedIn, currentUser, onCardLike, onDelete }) => {
   const user = currentUser || contextUser;
 
   const isLiked = item.likes && item.likes.some(id => id._id === user?._id || id === user?._id);
-  const isOwner = user && (user._id === item.owner?._id || user._id === item.owner);
 
   const handleCardClick = () => {
     setIsModalOpen(true);
