@@ -29,6 +29,7 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
           return;
         }
         await deleteItem(token, item._id);
+        if (onDelete) onDelete(item._id);
         onClose();
       } catch (err) {
         setError(err.message || 'Failed to delete item');

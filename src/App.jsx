@@ -8,7 +8,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterModal from './components/RegisterModal';
 import LoginModal from './components/LoginModal';
-import { checkToken, getItems, addCardLike, removeCardLike } from './utils/api';
+import { checkToken, getItems, addCardLike, removeCardLike, createItem } from './utils/api';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -68,6 +68,18 @@ function App() {
     setCurrentUser(updatedUser);
   };
 
+  const handleAddItem = async ({ name, imageUrl, weather }) => {
+    const token = localStorage.getItem('jwt');
+    const response = await createItem(token, name, imageUrl, weather);
+    if (response.data) {
+      setClothingItems((items) => [response.data, ...items]);
+    }
+  };
+
+  const handleDeleteItem = (itemId) => {
+    setClothingItems((items) => items.filter((item) => item._id !== itemId));
+  };
+
   const handleCardLike = async (itemId, isLiked) => {
     try {
       const token = localStorage.getItem('jwt');
@@ -117,10 +129,14 @@ function App() {
               path="/profile" 
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <Profile 
+                  <Profile
                     currentUser={currentUser}
                     onUpdateProfile={handleUpdateProfile}
                     onLogout={handleLogout}
+                    clothingItems={clothingItems}
+                    onCardLike={handleCardLike}
+                    onDeleteItem={handleDeleteItem}
+                    onAddItem={handleAddItem}
                   />
                 </ProtectedRoute>
               } 

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../utils/api';
+import ClothesSection from '../components/ClothesSection';
+import AddItemModal from '../components/AddItemModal';
 import './Profile.css';
 
-const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
+const Profile = ({ currentUser, onUpdateProfile, onLogout, clothingItems, onCardLike, onDeleteItem, onAddItem }) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(false);
@@ -109,16 +112,10 @@ const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
                 </div>
               </div>
               <div className="profile-actions">
-                <button
-                  className="edit-btn"
-                  onClick={() => setIsEditing(true)}
-                >
+                <button className="edit-btn" onClick={() => setIsEditing(true)}>
                   Edit Profile
                 </button>
-                <button
-                  className="signout-btn"
-                  onClick={handleSignOut}
-                >
+                <button className="signout-btn" onClick={handleSignOut}>
                   Sign Out
                 </button>
               </div>
@@ -147,23 +144,14 @@ const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
               </div>
               {avatar && (
                 <div className="avatar-preview">
-                  <img
-                    src={avatar}
-                    alt="Avatar Preview"
-                    className="avatar"
-                  />
+                  <img src={avatar} alt="Avatar Preview" className="avatar" />
                 </div>
               )}
               <div className="form-actions">
                 <button type="submit" disabled={loading} className="save-btn">
                   {loading ? 'Saving...' : 'Save Changes'}
                 </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  disabled={loading}
-                  className="cancel-btn"
-                >
+                <button type="button" onClick={handleCancel} disabled={loading} className="cancel-btn">
                   Cancel
                 </button>
               </div>
@@ -171,6 +159,27 @@ const Profile = ({ currentUser, onUpdateProfile, onLogout }) => {
           )}
         </div>
       </div>
+
+      <div className="clothes-section-wrapper">
+        <div className="clothes-section-header">
+          <h2>My Clothes</h2>
+          <button className="add-item-btn" onClick={() => setIsAddModalOpen(true)}>
+            + Add New Item
+          </button>
+        </div>
+        <ClothesSection
+          clothingItems={clothingItems || []}
+          onCardLike={onCardLike}
+          isLoggedIn={true}
+          onDelete={onDeleteItem}
+        />
+      </div>
+
+      <AddItemModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAddItem={onAddItem}
+      />
     </div>
   );
 };
