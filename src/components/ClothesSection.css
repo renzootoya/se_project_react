@@ -1,0 +1,29 @@
+.clothes-section {
+  width: 100%;
+}
+
+.clothes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.empty-message {
+  font-size: 14px;
+  color: #666;
+  padding: 20px 0;
+}
+
+@media (max-width: 1024px) {
+  .clothes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .clothes-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
