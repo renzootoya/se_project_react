@@ -35,10 +35,7 @@ exports.signup = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('signup error:', err.message);
-    if (err.name === 'MongoNotConnectedError' || err.name === 'MongoServerSelectionError') {
-      return res.status(503).json({ message: 'Database unavailable. Please try again shortly.' });
-    }
+    console.error('signup error:', err.name, err.message);
     return res.status(500).json({ message: err.message || 'Registration failed' });
   }
 };
@@ -73,10 +70,7 @@ exports.signin = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('signin error:', err.message);
-    if (err.name === 'MongoNotConnectedError' || err.name === 'MongoServerSelectionError') {
-      return res.status(503).json({ message: 'Database unavailable. Please try again shortly.' });
-    }
+    console.error('signin error:', err.name, err.message);
     return res.status(500).json({ message: err.message || 'Login failed' });
   }
 };
@@ -97,7 +91,7 @@ exports.getCurrentUser = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('getCurrentUser error:', err.message);
+    console.error('getCurrentUser error:', err.name, err.message);
     return res.status(500).json({ message: err.message || 'Failed to get user' });
   }
 };
@@ -129,7 +123,7 @@ exports.updateProfile = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('updateProfile error:', err.message);
+    console.error('updateProfile error:', err.name, err.message);
     return res.status(500).json({ message: err.message || 'Failed to update profile' });
   }
 };

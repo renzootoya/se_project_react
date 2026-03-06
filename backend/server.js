@@ -6,14 +6,10 @@ require('dotenv').config();
 
 const app = express();
 
-// Disable Mongoose command buffering so requests fail fast
-// instead of hanging when MongoDB is not connected
-mongoose.set('bufferCommands', false);
-
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection with fast-fail timeout
+// MongoDB Connection
 const MONGO_URI =
   process.env.MONGODB_URI ||
   process.env.MONGODB_URL ||
@@ -21,11 +17,29 @@ const MONGO_URI =
 
 mongoose
   .connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 5000,   // fail after 5s if can't reach DB
+    serverSelectionTimeoutMS: 15000, // 15s to handle DNS + TLS on cold start
     socketTimeoutMS: 45000,
   })
-  .then(() => console.log('MongoDB connected to', MONGO_URI.split('@').pop()))
-  .catch((err) => console.error('MongoDB connection error:', err.message));
+  .then(() => {
+    const safeUri = MONGO_URI.includes('@')
+      ? MONGO_URI.split('@')[1]
+      : MONGO_URI;
+    console.log('MongoDB connected to', safeUri);
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+  });
+
+// Health check — call /api/health to see server and DB status
+app.get('/api/health', (req, res) => {
+  const dbState = mongoose.connection.readyState;
+  const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  res.json({
+    server: 'ok',
+    database: states[dbState] || 'unknown',
+    mongoUri: MONGO_URI ? 'set' : 'NOT SET',
+  });
+});
 
 // API Routes
 const authRoutes = require('./routes/auth');
@@ -35,8 +49,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes);
 app.use('/api/clothing', clothingRoutes);
 
-// Global error handler — catches unhandled errors from routes
-// and returns JSON instead of hanging or crashing
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err.message);
   res.status(err.status || 500).json({ message: err.message || 'Internal server error' });
@@ -54,4 +67,6 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('MONGODB_URI is', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
+  console.log('MONGODB_URL is', process.env.MONGODB_URL ? 'SET' : 'NOT SET');
 });
