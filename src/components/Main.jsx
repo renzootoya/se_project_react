@@ -27,8 +27,14 @@ const Main = ({ isLoggedIn, clothingItems, setClothingItems, onCardLike }) => {
     <main className="main">
       <WeatherCard />
       <section className="main__clothes">
+        <div className="main__section-header">
+          <h2 className="main__section-title">All clothing</h2>
+          <p className="main__section-count">
+            {clothingItems.length} {clothingItems.length === 1 ? 'item' : 'items'}
+          </p>
+        </div>
         {clothingItems.length === 0 ? (
-          <p className="main__empty">No clothing items available</p>
+          <p className="main__empty">No clothing items yet. Log in and add some!</p>
         ) : (
           <div className="main__cards">
             {clothingItems.map((item) => (

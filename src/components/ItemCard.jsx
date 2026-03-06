@@ -8,7 +8,9 @@ const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
   const [isLiking, setIsLiking] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
 
-  const isLiked = item.likes && item.likes.some(id => id._id === currentUser?._id || id === currentUser?._id);
+  const isLiked = item.likes && item.likes.some(
+    (id) => id._id === currentUser?._id || id === currentUser?._id
+  );
 
   const handleCardClick = () => {
     setIsModalOpen(true);
@@ -16,12 +18,7 @@ const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
-    
-    if (!isLoggedIn) {
-      alert('Please log in to like items');
-      return;
-    }
-
+    if (!isLoggedIn) return;
     setIsLiking(true);
     try {
       await onCardLike(item._id, isLiked);
@@ -33,40 +30,36 @@ const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
   };
 
   const handleDelete = async (itemId) => {
-    if (onDelete) {
-      await onDelete(itemId);
-    }
+    if (onDelete) await onDelete(itemId);
   };
 
   return (
     <>
       <div className="item-card" onClick={handleCardClick}>
-        <div className="item-image-container">
-          <img src={item.imageUrl} alt={item.name} className="item-image" />
+        <div className="item-card__image-wrapper">
+          <img
+            src={item.imageUrl}
+            alt={item.name}
+            className="item-card__image"
+            onError={(e) => {
+              e.target.src = 'https://placehold.co/300x300?text=No+Image';
+            }}
+          />
           {isLoggedIn && (
             <button
-              className={`like-button ${isLiked ? 'liked' : ''}`}
+              className={`item-card__like-btn${isLiked ? ' item-card__like-btn_active' : ''}`}
               onClick={handleLikeClick}
               disabled={isLiking}
               title={isLiked ? 'Unlike' : 'Like'}
             >
-              {isLiked ? '❤️' : '🤍'}
+              {isLiked ? '♥' : '♡'}
             </button>
           )}
         </div>
-        <div className="item-info">
-          <h3>{item.name}</h3>
-          {item.weather && (
-            <div className="weather-tags">
-              {item.weather.map(w => (
-                <span key={w} className="weather-tag">{w}</span>
-              ))}
-            </div>
-          )}
-          {item.likes && (
-            <div className="likes-count">
-              {item.likes.length} {item.likes.length === 1 ? 'like' : 'likes'}
-            </div>
+        <div className="item-card__info">
+          <p className="item-card__name">{item.name}</p>
+          {item.weather && item.weather.length > 0 && (
+            <p className="item-card__weather">{item.weather[0]}</p>
           )}
         </div>
       </div>
