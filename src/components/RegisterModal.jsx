@@ -14,42 +14,31 @@ const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     if (!name.trim() || !email.trim() || !password) {
       setError('Please fill in all required fields');
-      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await signup(name, avatar, email, password);
-      console.log('Signup response:', response);
-
-      if (response.message && !response.token) {
-        setError(response.message);
-        setLoading(false);
-        return;
-      }
 
       if (response.token && response.user) {
         localStorage.setItem('jwt', response.token);
         resetForm();
         onSubmit(response.user);
-        onClose();
       } else {
-        setError('Registration failed - invalid response');
-        setLoading(false);
+        setError(response.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      console.error('Signup error:', err);
-      setError(err.message || 'Registration failed');
+      setError('Network error. Please check your connection and try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -61,6 +50,7 @@ const RegisterModal = ({ onClose, onSubmit, isOpen }) => {
     setPassword('');
     setConfirmPassword('');
     setError('');
+    setLoading(false);
   };
 
   const handleClose = () => {

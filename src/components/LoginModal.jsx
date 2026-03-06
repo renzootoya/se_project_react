@@ -11,36 +11,26 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     if (!email.trim() || !password) {
       setError('Please fill in all fields');
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await signin(email, password);
-      console.log('Signin response:', response);
-
-      if (response.message && !response.token) {
-        setError(response.message);
-        setLoading(false);
-        return;
-      }
 
       if (response.token && response.user) {
         localStorage.setItem('jwt', response.token);
         resetForm();
         onSubmit(response.user);
-        onClose();
       } else {
-        setError('Login failed - invalid response');
-        setLoading(false);
+        setError(response.message || 'Login failed. Please try again.');
       }
     } catch (err) {
-      console.error('Signin error:', err);
-      setError(err.message || 'Login failed');
+      setError('Network error. Please check your connection and try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -49,6 +39,7 @@ const LoginModal = ({ onClose, onSubmit, isOpen }) => {
     setEmail('');
     setPassword('');
     setError('');
+    setLoading(false);
   };
 
   const handleClose = () => {
