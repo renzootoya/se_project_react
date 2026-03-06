@@ -4,6 +4,7 @@ import './App.css';
 import { CurrentUserContext } from './contexts/CurrentUserContext';
 import Header from './components/Header';
 import Main from './components/Main';
+import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterModal from './components/RegisterModal';
@@ -106,9 +107,7 @@ function App() {
     <CurrentUserContext.Provider value={{ currentUser, isLoggedIn, setCurrentUser }}>
       <BrowserRouter>
         <div className="page">
-          <Header 
-            isLoggedIn={isLoggedIn} 
-            currentUser={currentUser}
+          <Header
             onSignUp={() => setActiveModal('register')}
             onSignIn={() => setActiveModal('login')}
             onLogout={handleLogout}
@@ -142,6 +141,7 @@ function App() {
               } 
             />
           </Routes>
+          <Footer />
         </div>
 
         {activeModal === 'register' && <RegisterModal isOpen={true} onClose={() => setActiveModal(null)} onSubmit={handleRegister} />}

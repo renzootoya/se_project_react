@@ -2,27 +2,40 @@ import React, { useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import './SideBar.css';
 
-const SideBar = ({ isOpen, onClose }) => {
+const SideBar = ({ onEditProfile, onSignOut }) => {
   const { currentUser } = useContext(CurrentUserContext);
 
+  const getAvatarPlaceholder = () => {
+    if (!currentUser?.name) return '?';
+    return currentUser.name.charAt(0).toUpperCase();
+  };
+
   return (
-    <>
-      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <button className="sidebar-close" onClick={onClose}>×</button>
-        {currentUser && (
-          <div className="sidebar__user">
-            <p className="sidebar__user-name">{currentUser.name}</p>
-            <p className="sidebar__user-email">{currentUser.email}</p>
+    <aside className="sidebar">
+      <div className="sidebar__user-info">
+        {currentUser?.avatar ? (
+          <img
+            src={currentUser.avatar}
+            alt={currentUser.name}
+            className="sidebar__avatar"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        ) : (
+          <div className="sidebar__avatar-placeholder">
+            {getAvatarPlaceholder()}
           </div>
         )}
-        <nav className="sidebar-nav">
-          <a href="/" className="sidebar-link">Home</a>
-          <a href="/profile" className="sidebar-link">Profile</a>
-          <a href="/" className="sidebar-link">Clothes</a>
-        </nav>
-      </aside>
-    </>
+        <p className="sidebar__username">{currentUser?.name}</p>
+      </div>
+      <div className="sidebar__actions">
+        <button className="sidebar__link" onClick={onEditProfile}>
+          Edit profile
+        </button>
+        <button className="sidebar__link" onClick={onSignOut}>
+          Sign out
+        </button>
+      </div>
+    </aside>
   );
 };
 

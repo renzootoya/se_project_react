@@ -1,90 +1,75 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Header.css';
+import { Link } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ToggleSwitch from './ToggleSwitch';
+import './Header.css';
 
-const Header = ({
-  isLoggedIn,
-  currentUser,
-  onLogout,
-  onSignUp,
-  onSignIn
-}) => {
-  const navigate = useNavigate();
-  const { currentUser: contextUser } = useContext(CurrentUserContext);
-  const user = currentUser || contextUser;
+const Header = ({ onSignUp, onSignIn, onLogout }) => {
+  const { currentUser, isLoggedIn } = useContext(CurrentUserContext);
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+  });
 
   const getAvatarPlaceholder = () => {
-    if (!user?.name) return '?';
-    return user.name.charAt(0).toUpperCase();
-  };
-
-  const handleLogout = () => {
-    onLogout();
-    navigate('/');
+    if (!currentUser?.name) return '?';
+    return currentUser.name.charAt(0).toUpperCase();
   };
 
   return (
-    <>
-      <header className="header">
-        <div className="header-container">
-          <Link to="/" className="logo">
+    <header className="header">
+      <div className="header__content">
+        <div className="header__logo-section">
+          <Link to="/" className="header__logo">
             WTWR
           </Link>
-          <nav className="nav">
-            <ToggleSwitch />
-            {isLoggedIn && user ? (
-              <>
-                <Link to="/profile" className="nav-link">
-                  Profile
-                </Link>
-                <div className="user-section">
-                  {user.avatar ? (
-                    <img 
-                      src={user.avatar} 
-                      alt={user.name} 
-                      className="avatar-img"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div 
-                    className="avatar-placeholder"
-                    style={{
-                      display: user.avatar ? 'none' : 'flex'
-                    }}
-                  >
-                    {getAvatarPlaceholder()}
-                  </div>
-                  <span className="user-name">{user.name}</span>
-                </div>
-                <button onClick={handleLogout} className="auth-btn logout-btn">
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={onSignUp}
-                  className="auth-btn"
-                >
-                  Register
-                </button>
-                <button
-                  onClick={onSignIn}
-                  className="auth-btn primary"
-                >
-                  Sign In
-                </button>
-              </>
-            )}
-          </nav>
+          <p className="header__date">
+            {currentDate}
+          </p>
         </div>
-      </header>
-    </>
+
+        <nav className="header__nav">
+          <ToggleSwitch />
+          {isLoggedIn && currentUser ? (
+            <>
+              <Link to="/profile" className="header__link">
+                + Add clothes
+              </Link>
+              <Link to="/profile" className="header__user-info">
+                <span className="header__username">{currentUser.name}</span>
+                {currentUser.avatar ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
+                    className="header__avatar"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div
+                  className="header__avatar-placeholder"
+                  style={{ display: currentUser.avatar ? 'none' : 'flex' }}
+                >
+                  {getAvatarPlaceholder()}
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              <button onClick={onSignUp} className="header__btn">
+                Register
+              </button>
+              <button onClick={onSignIn} className="header__btn header__btn_type_login">
+                Log in
+              </button>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 };
 
