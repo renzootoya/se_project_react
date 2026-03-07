@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.REACT_APP_API || 'http://localhost:3001/api';
 
 export const signup = (name, avatar, email, password) => {
   return fetch(`${API_BASE_URL}/auth/signup`, {
