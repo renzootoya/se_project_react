@@ -114,6 +114,30 @@
   opacity: 0.9;
 }
 
+.header__btn_type_add {
+  text-decoration: none;
+}
+
+/* F / C temperature toggle */
+.header__temp-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header__temp-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  min-width: 12px;
+  transition: color 0.2s;
+}
+
+.header__temp-label_active {
+  color: #fff;
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0 16px;

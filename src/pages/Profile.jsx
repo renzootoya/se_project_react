@@ -6,7 +6,9 @@ import AddItemModal from '../components/AddItemModal';
 import EditProfileModal from '../components/EditProfileModal';
 import './Profile.css';
 
-const Profile = ({ currentUser, onUpdateProfile, onLogout, clothingItems, onCardLike, onDeleteItem, onAddItem }) => {
+const Profile = ({ onUpdateProfile, onLogout, clothingItems, onCardLike, onDeleteItem, onAddItem }) => {
+  // currentUser comes from context — no need to pass as prop
+  
   const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -27,7 +29,11 @@ const Profile = ({ currentUser, onUpdateProfile, onLogout, clothingItems, onCard
       <div className="profile__clothes">
         <div className="profile__clothes-header">
           <p className="profile__clothes-title">Your items</p>
-          <button className="profile__add-btn" onClick={() => setIsAddModalOpen(true)}>
+          <button
+            className="profile__add-btn"
+            onClick={() => setIsAddModalOpen(true)}
+            type="button"
+          >
             + Add new
           </button>
         </div>
