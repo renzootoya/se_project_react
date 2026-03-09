@@ -10,6 +10,7 @@ const ModalWithForm = ({
   submitButtonText = 'Submit',
   loading = false,
   error = null,
+  success = null,
   footer = null,
 }) => {
   if (!isOpen) return null;
@@ -30,6 +31,7 @@ const ModalWithForm = ({
         <form onSubmit={onSubmit}>
           {children}
           {error && <p className="modal-error">{error}</p>}
+          {success && <p className="modal-success">{success}</p>}
           <button
             type="submit"
             disabled={loading}

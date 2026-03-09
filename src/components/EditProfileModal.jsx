@@ -20,43 +20,42 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
     }
   }, [currentUser, isOpen]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setLoading(true);
 
     if (!name.trim()) {
       setError('Name is required');
+      return;
+    }
+
+    setLoading(true);
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      setError('No authentication token found');
       setLoading(false);
       return;
     }
 
-    try {
-      const token = localStorage.getItem('jwt');
-      if (!token) {
-        setError('No authentication token found');
+    updateUser(token, name, avatar)
+      .then((data) => {
+        if (data.message && !data.user) {
+          setError(data.message || 'Failed to update profile');
+          return;
+        }
+        setSuccess('Profile updated successfully!');
+        onUpdateProfile(data.user || { ...currentUser, name, avatar });
+        setTimeout(() => {
+          onClose();
+        }, 1500);
+      })
+      .catch(() => {
+        setError('Failed to update profile');
+      })
+      .finally(() => {
         setLoading(false);
-        return;
-      }
-
-      const data = await updateUser(token, name, avatar);
-
-      if (data.message && !data.user) {
-        setError(data.message || 'Failed to update profile');
-        setLoading(false);
-        return;
-      }
-
-      setSuccess('Profile updated successfully!');
-      onUpdateProfile(data.user || { ...currentUser, name, avatar });
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (err) {
-      setError(err.message || 'Failed to update profile');
-      setLoading(false);
-    }
+      });
   };
 
   const handleCancel = () => {
@@ -79,18 +78,21 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
       success={success}
     >
       <div className="form-group">
-        <label>Name *</label>
+        <label htmlFor="edit-name">Name</label>
         <input
+          id="edit-name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter your name"
           disabled={loading}
+          required
         />
       </div>
       <div className="form-group">
-        <label>Avatar URL</label>
+        <label htmlFor="edit-avatar">Avatar URL</label>
         <input
+          id="edit-avatar"
           type="url"
           value={avatar}
           onChange={(e) => setAvatar(e.target.value)}
@@ -100,9 +102,9 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
       </div>
       {avatar && (
         <div className="avatar-preview">
-          <img 
-            src={avatar} 
-            alt="Avatar Preview" 
+          <img
+            src={avatar}
+            alt="Avatar Preview"
             className="preview-img"
             onError={(e) => {
               e.target.alt = 'Invalid URL';

@@ -216,6 +216,12 @@
   margin-bottom: 12px;
 }
 
+.modal-success {
+  color: #155724;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
 .modal-submit-btn {
   width: 100%;
   padding: 12px;
