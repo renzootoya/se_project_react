@@ -17,7 +17,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:all": "npm ci && npm run build",
-    "start:prod": "cd backend && npm install && npm start"
+    "start:prod": "node backend/server.js"
   },
   "eslintConfig": {
     "extends": [

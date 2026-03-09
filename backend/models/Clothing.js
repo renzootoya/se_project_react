@@ -13,7 +13,7 @@ const clothingSchema = new mongoose.Schema({
   },
   weather: {
     type: [String],
-    enum: ['Hot', 'Warm', 'Cool', 'Cold'],
+    enum: ['Hot', 'Warm', 'Cold'],
     required: [true, 'Please specify weather type']
   },
   owner: {
