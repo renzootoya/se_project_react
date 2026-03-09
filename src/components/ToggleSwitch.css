@@ -1,20 +1,8 @@
-.toggle-switch-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.toggle-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
 .toggle-switch {
   position: relative;
   width: 50px;
   height: 28px;
-  background-color: #ccc;
+  background-color: rgba(255, 255, 255, 0.3);
   border: none;
   border-radius: 14px;
   cursor: pointer;
@@ -22,25 +10,25 @@
   transition: background-color 0.3s ease;
 }
 
-.toggle-switch.on {
-  background-color: #4caf50;
+.toggle-switch_on {
+  background-color: #fff;
 }
 
-.toggle-switch.off {
-  background-color: #ccc;
+.toggle-switch_off {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
-.toggle-slider {
+.toggle-switch__slider {
   position: absolute;
   top: 2px;
   left: 2px;
   width: 24px;
   height: 24px;
-  background-color: white;
+  background-color: #1f1f1f;
   border-radius: 50%;
   transition: left 0.3s ease;
 }
 
-.toggle-switch.on .toggle-slider {
+.toggle-switch_on .toggle-switch__slider {
   left: 24px;
 }

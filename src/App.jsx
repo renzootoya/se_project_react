@@ -4,12 +4,13 @@ import './App.css';
 import { CurrentUserContext } from './contexts/CurrentUserContext';
 import Header from './components/Header';
 import Main from './components/Main';
-import AddItemModal from './components/AddItemModal';
+import Footer from './components/Footer';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterModal from './components/RegisterModal';
 import LoginModal from './components/LoginModal';
-import { checkToken, getItems, createItem } from './utils/api';
+import AddItemModal from './components/AddItemModal';
+import { checkToken, getItems, addCardLike, removeCardLike, createItem, deleteItem } from './utils/api';
 import { fetchWeather } from './utils/weatherApi';
 
 function App() {
@@ -21,15 +22,12 @@ function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [isCelsius, setIsCelsius] = useState(false);
 
-  // ── Close any open modal ──────────────────────────────────
   const closeActiveModal = () => setActiveModal(null);
 
-  // ── Fetch weather on mount ────────────────────────────────
   useEffect(() => {
     fetchWeather().then(setWeatherData);
   }, []);
 
-  // ── Verify token and load items on mount ──────────────────
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (token) {
@@ -42,18 +40,23 @@ function App() {
             localStorage.removeItem('jwt');
           }
         })
-        .catch(() => localStorage.removeItem('jwt'))
-        .finally(() => setLoading(false));
+        .catch(() => {
+          localStorage.removeItem('jwt');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } else {
       setLoading(false);
     }
 
     getItems()
-      .then((data) => setClothingItems(data.data || []))
+      .then((data) => {
+        setClothingItems(data.data || []);
+      })
       .catch((err) => console.error('Error loading items:', err));
   }, []);
 
-  // ── Auth handlers ─────────────────────────────────────────
   const handleRegister = (user) => {
     setCurrentUser(user);
     setIsLoggedIn(true);
@@ -72,41 +75,44 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const handleUpdateProfile = (updatedUser) => setCurrentUser(updatedUser);
+  const handleUpdateProfile = (updatedUser) => {
+    setCurrentUser(updatedUser);
+  };
 
-  // ── Item handlers ─────────────────────────────────────────
-  const handleAddItem = async ({ name, imageUrl, weather }) => {
+  const handleAddItem = ({ name, imageUrl, weather }) => {
     const token = localStorage.getItem('jwt');
-    const response = await createItem(token, name, imageUrl, weather);
-    const newItem = response.data || response;
-    setClothingItems((prev) => [newItem, ...prev]);
+    return createItem(token, name, imageUrl, weather).then((response) => {
+      if (response.data) {
+        setClothingItems((items) => [response.data, ...items]);
+        closeActiveModal();
+      }
+    });
   };
 
   const handleDeleteItem = (itemId) => {
-    setClothingItems((prev) => prev.filter((item) => item._id !== itemId));
+    const token = localStorage.getItem('jwt');
+    return deleteItem(token, itemId).then(() => {
+      setClothingItems((items) => items.filter((item) => item._id !== itemId));
+    });
   };
 
-  const handleCardLike = async (itemId, isLiked) => {
-    try {
-      const token = localStorage.getItem('jwt');
-      if (!token) return;
-      const { addCardLike, removeCardLike } = await import('./utils/api');
-      const fn = isLiked ? removeCardLike : addCardLike;
-      const response = await fn(token, itemId);
-      const updatedLikes = response.data?.likes || response.likes;
-      setClothingItems((prev) =>
-        prev.map((item) =>
-          item._id === itemId
-            ? { ...item, likes: updatedLikes || item.likes }
-            : item
-        )
-      );
-    } catch (err) {
-      console.error('Error updating like:', err);
-    }
+  const handleCardLike = (itemId, isLiked) => {
+    const token = localStorage.getItem('jwt');
+    if (!token) return;
+
+    const endpoint = isLiked ? removeCardLike : addCardLike;
+    return endpoint(token, itemId).then((response) => {
+      if (response.data) {
+        setClothingItems((items) =>
+          items.map((item) => (item._id === itemId ? response.data : item))
+        );
+      }
+    });
   };
 
-  if (loading) return <div className="app-loading">Loading…</div>;
+  if (loading) {
+    return <div className="app-loading">Loading...</div>;
+  }
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, isLoggedIn, setCurrentUser }}>
@@ -149,9 +155,9 @@ function App() {
               }
             />
           </Routes>
+          <Footer />
         </div>
 
-        {/* ── Modals ── */}
         {activeModal === 'register' && (
           <RegisterModal
             isOpen

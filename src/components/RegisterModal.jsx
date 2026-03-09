@@ -10,36 +10,46 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+
     if (!name.trim() || !email.trim() || !password) {
       setError('Please fill in all required fields');
       return;
     }
+
     setLoading(true);
-    try {
-      const response = await signup(name, avatar, email, password);
-      if (response.token && response.user) {
-        localStorage.setItem('jwt', response.token);
-        resetForm();
-        onSubmit(response.user);
-      } else {
-        setError(response.message || 'Registration failed. Please try again.');
-      }
-    } catch (err) {
-      setError('Network error. Please check your connection.');
-    } finally {
-      setLoading(false);
-    }
+    signup(name, avatar, email, password)
+      .then((response) => {
+        if (response.token && response.user) {
+          localStorage.setItem('jwt', response.token);
+          resetForm();
+          onSubmit(response.user);
+        } else {
+          setError(response.message || 'Registration failed. Please try again.');
+        }
+      })
+      .catch(() => {
+        setError('Network error. Please check your connection and try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const resetForm = () => {
-    setName(''); setAvatar(''); setEmail('');
-    setPassword(''); setError(''); setLoading(false);
+    setName('');
+    setAvatar('');
+    setEmail('');
+    setPassword('');
+    setError('');
   };
 
-  const handleClose = () => { resetForm(); onClose(); };
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   return (
     <ModalWithForm
@@ -52,9 +62,13 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
       error={error}
       footer={
         onSwitchToLogin ? (
-          <p>
+          <p className="modal-footer__text">
             Already a member?{' '}
-            <button type="button" className="modal-switch-btn" onClick={onSwitchToLogin}>
+            <button
+              type="button"
+              className="modal-switch-btn"
+              onClick={onSwitchToLogin}
+            >
               Log in here
             </button>
           </p>

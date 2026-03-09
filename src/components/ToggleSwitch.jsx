@@ -1,29 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ToggleSwitch.css';
 
-const ToggleSwitch = ({ isOn, onChange, label }) => {
-  const [isActive, setIsActive] = useState(isOn || false);
-
-  const handleToggle = () => {
-    const newState = !isActive;
-    setIsActive(newState);
-    if (onChange) {
-      onChange(newState);
-    }
-  };
-
+const ToggleSwitch = ({ isOn, onChange }) => {
   return (
-    <div className="toggle-switch-container">
-      {label && <label className="toggle-label">{label}</label>}
-      <button
-        className={`toggle-switch ${isActive ? 'on' : 'off'}`}
-        onClick={handleToggle}
-        type="button"
-        aria-pressed={isActive}
-      >
-        <span className="toggle-slider" />
-      </button>
-    </div>
+    <button
+      type="button"
+      className={`toggle-switch ${isOn ? 'toggle-switch_on' : 'toggle-switch_off'}`}
+      onClick={onChange}
+      aria-pressed={isOn}
+    >
+      <span className="toggle-switch__slider" />
+    </button>
   );
 };
 

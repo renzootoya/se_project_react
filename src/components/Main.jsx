@@ -4,10 +4,9 @@ import WeatherCard from './WeatherCard';
 import './Main.css';
 
 const Main = ({ isLoggedIn, clothingItems, onCardLike, weatherData, isCelsius }) => {
-  // Filter items to only show those matching the current weather type
   const filteredItems = weatherData?.type
-    ? clothingItems.filter((item) =>
-        Array.isArray(item.weather) && item.weather.includes(weatherData.type)
+    ? clothingItems.filter(
+        (item) => Array.isArray(item.weather) && item.weather.includes(weatherData.type)
       )
     : clothingItems;
 
@@ -15,12 +14,13 @@ const Main = ({ isLoggedIn, clothingItems, onCardLike, weatherData, isCelsius })
     <main className="main">
       <WeatherCard weatherData={weatherData} isCelsius={isCelsius} />
       <section className="main__clothes">
+        <div className="main__section-header">
+          <h2 className="main__section-title">
+            Today is {weatherData?.type || 'nice'}, you may want to wear:
+          </h2>
+        </div>
         {filteredItems.length === 0 ? (
-          <p className="main__empty">
-            {clothingItems.length === 0
-              ? 'No clothing items yet. Add some!'
-              : `No ${weatherData?.type?.toLowerCase() || ''} weather items yet.`}
-          </p>
+          <p className="main__empty">No clothing items for this weather yet.</p>
         ) : (
           <div className="main__cards">
             {filteredItems.map((item) => (

@@ -20,7 +20,7 @@ exports.signup = (req, res, next) => {
       return User.create({ name, avatar: avatar || '', email, password });
     })
     .then((user) => {
-      if (!user || user.res) return; // already responded (409 case)
+      if (!user || user.statusCode) return; // already responded
       const token = generateToken(user._id);
       return res.status(201).json({
         token,

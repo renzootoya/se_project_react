@@ -8,38 +8,44 @@ const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+
     if (!email.trim() || !password) {
       setError('Please fill in all fields');
       return;
     }
+
     setLoading(true);
-    try {
-      const response = await signin(email, password);
-      if (response.token && response.user) {
-        localStorage.setItem('jwt', response.token);
-        resetForm();
-        onSubmit(response.user);
-      } else {
-        setError(response.message || 'Login failed. Please try again.');
-      }
-    } catch (err) {
-      setError('Network error. Please check your connection.');
-    } finally {
-      setLoading(false);
-    }
+    signin(email, password)
+      .then((response) => {
+        if (response.token && response.user) {
+          localStorage.setItem('jwt', response.token);
+          resetForm();
+          onSubmit(response.user);
+        } else {
+          setError(response.message || 'Login failed. Please try again.');
+        }
+      })
+      .catch(() => {
+        setError('Network error. Please check your connection and try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const resetForm = () => {
     setEmail('');
     setPassword('');
     setError('');
-    setLoading(false);
   };
 
-  const handleClose = () => { resetForm(); onClose(); };
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   return (
     <ModalWithForm
@@ -52,9 +58,13 @@ const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
       error={error}
       footer={
         onSwitchToRegister ? (
-          <p>
+          <p className="modal-footer__text">
             Not a member yet?{' '}
-            <button type="button" className="modal-switch-btn" onClick={onSwitchToRegister}>
+            <button
+              type="button"
+              className="modal-switch-btn"
+              onClick={onSwitchToRegister}
+            >
               Sign up here
             </button>
           </p>

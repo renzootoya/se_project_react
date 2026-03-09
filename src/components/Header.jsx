@@ -28,19 +28,25 @@ const Header = ({ onSignUp, onSignIn, onLogout, onAddClothes, isCelsius, onToggl
         </div>
 
         <nav className="header__nav">
-          {/* Temperature toggle: F ← toggle → C */}
           <div className="header__temp-toggle">
-            <span className={`header__temp-label${!isCelsius ? ' header__temp-label_active' : ''}`}>F</span>
+            <span
+              className={`header__temp-label${!isCelsius ? ' header__temp-label_active' : ''}`}
+            >
+              F
+            </span>
             <ToggleSwitch isOn={isCelsius} onChange={onToggleTemp} />
-            <span className={`header__temp-label${isCelsius ? ' header__temp-label_active' : ''}`}>C</span>
+            <span
+              className={`header__temp-label${isCelsius ? ' header__temp-label_active' : ''}`}
+            >
+              C
+            </span>
           </div>
 
           {isLoggedIn && currentUser ? (
             <>
-              {/* "Add clothes" opens the modal — NOT a navigation link */}
               <button
                 type="button"
-                className="header__link header__btn header__btn_type_add"
+                className="header__btn header__btn_type_add"
                 onClick={onAddClothes}
               >
                 + Add clothes
@@ -68,13 +74,13 @@ const Header = ({ onSignUp, onSignIn, onLogout, onAddClothes, isCelsius, onToggl
             </>
           ) : (
             <>
-              <button onClick={onSignUp} className="header__btn" type="button">
-                Sign up
+              <button type="button" onClick={onSignUp} className="header__btn">
+                Register
               </button>
               <button
+                type="button"
                 onClick={onSignIn}
                 className="header__btn header__btn_type_login"
-                type="button"
               >
                 Log in
               </button>
