@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -22,6 +23,15 @@ const clothingRoutes = require('./routes/clothing');
 app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes);
 app.use('/api/clothing', clothingRoutes);
+
+// Serve React static build in production
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '..', 'build');
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
 
 // Global error handler — must be last middleware
 app.use((err, req, res, next) => {
