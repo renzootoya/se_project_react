@@ -10,7 +10,8 @@ import ProtectedRoute from './ProtectedRoute';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
 import AddItemModal from './AddItemModal';
-import { checkToken, getItems, addCardLike, removeCardLike, createItem, deleteItem } from '../utils/api';
+import { checkToken } from '../utils/auth';
+import { getItems, addCardLike, removeCardLike, createItem, deleteItem } from '../utils/api';
 import { fetchWeather } from '../utils/weatherApi';
 
 function App() {

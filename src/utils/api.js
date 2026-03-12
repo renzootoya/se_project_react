@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API || '/api';
+const BASE_URL = process.env.REACT_APP_API || '';
 
 const fetchWithTimeout = (url, options, timeout = 10000) => {
   return Promise.race([
@@ -9,34 +9,8 @@ const fetchWithTimeout = (url, options, timeout = 10000) => {
   ]);
 };
 
-export const signup = (name, avatar, email, password) => {
-  return fetchWithTimeout(`${API_BASE_URL}/auth/signup`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, avatar, email, password })
-  }).then(res => res.json()).catch(err => {
-    console.error('Signup fetch error:', err);
-    return { message: err.message || 'Network error' };
-  });
-};
-
-export const signin = (email, password) => {
-  return fetchWithTimeout(`${API_BASE_URL}/auth/signin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  }).then(res => res.json()).catch(err => {
-    console.error('Signin fetch error:', err);
-    return { message: err.message || 'Network error' };
-  });
-};
-
 export const checkToken = (token) => {
-  return fetchWithTimeout(`${API_BASE_URL}/users/me`, {
+  return fetchWithTimeout(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -49,7 +23,7 @@ export const checkToken = (token) => {
 };
 
 export const updateUser = (token, name, avatar) => {
-  return fetchWithTimeout(`${API_BASE_URL}/users/me`, {
+  return fetchWithTimeout(`${BASE_URL}/users/me`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +37,7 @@ export const updateUser = (token, name, avatar) => {
 };
 
 export const getItems = () => {
-  return fetchWithTimeout(`${API_BASE_URL}/clothing`, {
+  return fetchWithTimeout(`${BASE_URL}/items`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -75,8 +49,8 @@ export const getItems = () => {
 };
 
 export const addCardLike = (token, itemId) => {
-  return fetchWithTimeout(`${API_BASE_URL}/clothing/${itemId}/like`, {
-    method: 'POST',
+  return fetchWithTimeout(`${BASE_URL}/items/${itemId}/likes`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -88,7 +62,7 @@ export const addCardLike = (token, itemId) => {
 };
 
 export const removeCardLike = (token, itemId) => {
-  return fetchWithTimeout(`${API_BASE_URL}/clothing/${itemId}/unlike`, {
+  return fetchWithTimeout(`${BASE_URL}/items/${itemId}/likes`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -101,7 +75,7 @@ export const removeCardLike = (token, itemId) => {
 };
 
 export const deleteItem = (token, itemId) => {
-  return fetchWithTimeout(`${API_BASE_URL}/clothing/${itemId}`, {
+  return fetchWithTimeout(`${BASE_URL}/items/${itemId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -114,7 +88,7 @@ export const deleteItem = (token, itemId) => {
 };
 
 export const createItem = (token, name, imageUrl, weather) => {
-  return fetchWithTimeout(`${API_BASE_URL}/clothing`, {
+  return fetchWithTimeout(`${BASE_URL}/items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

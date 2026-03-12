@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signup } from '../utils/api';
+import { signup } from '../utils/auth';
 import ModalWithForm from './ModalWithForm';
 
 const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {

@@ -1,7 +1,7 @@
-const API_BASE_URL = process.env.REACT_APP_API || '/api';
+const BASE_URL = process.env.REACT_APP_API || '';
 
 export const signup = (name, avatar, email, password) => {
-  return fetch(`${API_BASE_URL}/auth/signup`, {
+  return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ export const signup = (name, avatar, email, password) => {
 };
 
 export const signin = (email, password) => {
-  return fetch(`${API_BASE_URL}/auth/signin`, {
+  return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export const signin = (email, password) => {
 };
 
 export const checkToken = (token) => {
-  return fetch(`${API_BASE_URL}/users/me`, {
+  return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

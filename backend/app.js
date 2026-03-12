@@ -17,12 +17,18 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
-const authRoutes = require('./routes/auth');
+const authController = require('./controllers/authController');
+const authMiddleware = require('./middleware/auth');
 const clothingRoutes = require('./routes/clothing');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', authRoutes);
-app.use('/api/clothing', clothingRoutes);
+// Auth routes — standard project 12/13 paths
+app.post('/signup', authController.signup);
+app.post('/signin', authController.signin);
+app.get('/users/me', authMiddleware, authController.getCurrentUser);
+app.patch('/users/me', authMiddleware, authController.updateProfile);
+
+// Clothing items — standard project 12/13 paths
+app.use('/items', clothingRoutes);
 
 // Serve React static build in production
 if (process.env.NODE_ENV === 'production') {
