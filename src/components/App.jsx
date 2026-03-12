@@ -5,7 +5,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import Profile from '../pages/Profile';
+import Profile from './Profile';
 import ProtectedRoute from './ProtectedRoute';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
