@@ -23,6 +23,7 @@ const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
     onAddItem({ name, imageUrl, weather: [weather] })
       .then(() => {
         resetForm();
+        onClose();
       })
       .catch((err) => {
         setError(err.message || 'Failed to add item');

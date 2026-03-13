@@ -8,7 +8,6 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
   const [avatar, setAvatar] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
   const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
@@ -16,14 +15,12 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
       setName(currentUser.name || '');
       setAvatar(currentUser.avatar || '');
       setError('');
-      setSuccess('');
     }
   }, [currentUser, isOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
 
     if (!name.trim()) {
       setError('Name is required');
@@ -44,11 +41,8 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
           setError(data.message || 'Failed to update profile');
           return;
         }
-        setSuccess('Profile updated successfully!');
         onUpdateProfile(data.user || { ...currentUser, name, avatar });
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+        onClose();
       })
       .catch(() => {
         setError('Failed to update profile');
@@ -62,7 +56,6 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
     setName(currentUser?.name || '');
     setAvatar(currentUser?.avatar || '');
     setError('');
-    setSuccess('');
     onClose();
   };
 
@@ -75,7 +68,6 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateProfile }) => {
       submitButtonText="Save Changes"
       loading={loading}
       error={error}
-      success={success}
     >
       <div className="form-group">
         <label htmlFor="edit-name">Name</label>

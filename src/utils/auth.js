@@ -7,7 +7,12 @@ export const signup = (name, avatar, email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ name, avatar, email, password }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error('Signup error:', err);
+      return { message: err.message || 'Network error' };
+    });
 };
 
 export const signin = (email, password) => {
@@ -17,7 +22,12 @@ export const signin = (email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error('Signin error:', err);
+      return { message: err.message || 'Network error' };
+    });
 };
 
 export const checkToken = (token) => {
@@ -27,5 +37,10 @@ export const checkToken = (token) => {
       'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error('CheckToken error:', err);
+      return { message: err.message || 'Network error' };
+    });
 };
