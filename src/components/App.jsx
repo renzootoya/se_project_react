@@ -26,7 +26,9 @@ function App() {
   const closeActiveModal = () => setActiveModal(null);
 
   useEffect(() => {
-    fetchWeather().then(setWeatherData);
+    fetchWeather()
+      .then(setWeatherData)
+      .catch((err) => console.error('Weather fetch error:', err));
   }, []);
 
   useEffect(() => {
@@ -82,19 +84,23 @@ function App() {
 
   const handleAddItem = ({ name, imageUrl, weather }) => {
     const token = localStorage.getItem('jwt');
-    return createItem(token, name, imageUrl, weather).then((response) => {
-      if (response.data) {
-        setClothingItems((items) => [response.data, ...items]);
-        closeActiveModal();
-      }
-    });
+    return createItem(token, name, imageUrl, weather)
+      .then((response) => {
+        if (response.data) {
+          setClothingItems((items) => [response.data, ...items]);
+          closeActiveModal();
+        }
+      })
+      .catch((err) => console.error('Add item error:', err));
   };
 
   const handleDeleteItem = (itemId) => {
     const token = localStorage.getItem('jwt');
-    return deleteItem(token, itemId).then(() => {
-      setClothingItems((items) => items.filter((item) => item._id !== itemId));
-    });
+    return deleteItem(token, itemId)
+      .then(() => {
+        setClothingItems((items) => items.filter((item) => item._id !== itemId));
+      })
+      .catch((err) => console.error('Delete item error:', err));
   };
 
   const handleCardLike = (itemId, isLiked) => {
@@ -102,13 +108,15 @@ function App() {
     if (!token) return;
 
     const endpoint = isLiked ? removeCardLike : addCardLike;
-    return endpoint(token, itemId).then((response) => {
-      if (response.data) {
-        setClothingItems((items) =>
-          items.map((item) => (item._id === itemId ? response.data : item))
-        );
-      }
-    });
+    return endpoint(token, itemId)
+      .then((response) => {
+        if (response.data) {
+          setClothingItems((items) =>
+            items.map((item) => (item._id === itemId ? response.data : item))
+          );
+        }
+      })
+      .catch((err) => console.error('Like error:', err));
   };
 
   if (loading) {
