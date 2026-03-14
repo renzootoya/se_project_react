@@ -41,13 +41,16 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
-const authRoutes = require('./routes/auth');
+// API Routes — standard project 12/13 paths
+const authController = require('./controllers/authController');
+const authMiddleware = require('./middleware/auth');
 const clothingRoutes = require('./routes/clothing');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', authRoutes);
-app.use('/api/clothing', clothingRoutes);
+app.post('/signup', authController.signup);
+app.post('/signin', authController.signin);
+app.get('/users/me', authMiddleware, authController.getCurrentUser);
+app.patch('/users/me', authMiddleware, authController.updateProfile);
+app.use('/items', clothingRoutes);
 
 // Serve React static build
 const frontendBuildPath = path.join(__dirname, '../build');
