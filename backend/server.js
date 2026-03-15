@@ -11,6 +11,7 @@ app.use(express.json());
 
 // MongoDB Connection
 const MONGO_URI =
+  process.env.MONGO_URL ||
   process.env.MONGODB_URI ||
   process.env.MONGODB_URL ||
   'mongodb://localhost:27017/wtwr';
