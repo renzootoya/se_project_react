@@ -1,303 +1,62 @@
 # WTWR - What to Wear Right Now
 
-A full-stack React + Express + MongoDB application for managing clothing items and getting outfit recommendations based on weather.
+A full-stack React + Express + MongoDB application that helps users decide what to wear based on the current weather.
 
-## 🚀 Live Deployment
+## Live Deployment
 
-**Live App (Railway):** https://web-production-ac1da.up.railway.app/
+**Live App:** https://web-production-ac1da.up.railway.app
 
-**GitHub Repository:** https://github.com/renzootoya/se_project_react
+## Repositories
 
-**Backend Repository:** https://github.com/renzootoya/se_project_backend
+- **Frontend:** https://github.com/renzootoya/se_project_react
+- **Backend:** https://github.com/renzootoya/se_project_express
 
-The app is deployed on Railway and fully functional with MongoDB connected.
+## Features
 
-## 🚀 Features
+- User registration and login with JWT authentication
+- Add, view, and delete clothing items
+- Like / unlike clothing items
+- Edit user profile (name and avatar)
+- Weather-based clothing filtering (hot, warm, cold)
+- Protected routes for authenticated users
 
-- **User Authentication**: Register and login with JWT tokens
-- **User Profiles**: Edit profile information and avatar
-- **Clothing Management**: Browse and manage clothing items
-- **Like/Unlike**: Save favorite clothing items
-- **Protected Routes**: Profile page accessible only to authenticated users
-- **Responsive Design**: Works on desktop and mobile devices
-- **Weather-Based Filtering**: Organize clothes by weather type (Hot, Warm, Cool, Cold)
+## Tech Stack
 
-## 📋 Tech Stack
+**Frontend:** React 18, React Router 6, Context API, CSS3
 
-### Frontend
-- **React** 18 - UI library
-- **React Router** 6 - Client-side routing
-- **CSS3** - Styling with responsive design
-- **Fetch API** - HTTP requests
+**Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, bcryptjs, celebrate/joi, winston
 
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB ODM
-- **JWT** - Authentication
-- **bcryptjs** - Password hashing
-- **CORS** - Cross-origin requests
+## API Endpoints
 
-## 📁 Project Structure
+### Auth
+- `POST /signup` — register a new user
+- `POST /signin` — login and receive JWT token
 
-```
-project-14/
-├── frontend/
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Header.css
-│   │   │   ├── Main.jsx
-│   │   │   ├── Main.css
-│   │   │   ├── ItemCard.jsx
-│   │   │   ├── ItemCard.css
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Footer.css
-│   │   │   ├── LoginModal.jsx
-│   │   │   ├── RegisterModal.jsx
-│   │   │   ├── Modal.css
-│   │   │   └── ProtectedRoute.jsx
-│   │   ├── pages/
-│   │   │   ├── Profile.jsx
-│   │   │   └── Profile.css
-│   │   ├── contexts/
-│   │   │   └── CurrentUserContext.jsx
-│   │   ├── utils/
-│   │   │   └── auth.js
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── index.js
-│   │   └── index.css
-│   ├── App.jsx
-│   ├── package.json
-│   └── .gitignore
-│
-└── backend/
-    ├── models/
-    │   ├── User.js
-    │   └── Clothing.js
-    ├── routes/
-    │   ├── auth.js
-    │   └── clothing.js
-    ├── controllers/
-    │   ├── authController.js
-    │   └── clothingController.js
-    ├── middleware/
-    │   └── auth.js
-    ├── app.js
-    ├── package.json
-    ├── .env
-    └── .gitignore
-```
+### Users (token required)
+- `GET /users/me` — get current user
+- `PATCH /users/me` — update name and avatar
 
-## 🔧 Installation & Setup
+### Clothing Items
+- `GET /items` — get all items (public)
+- `POST /items` — create item (token required)
+- `DELETE /items/:itemId` — delete item (owner only)
+- `PUT /items/:itemId/likes` — like item (token required)
+- `DELETE /items/:itemId/likes` — unlike item (token required)
 
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (running locally or connection string)
-- npm or yarn
+## Running Locally
 
-### Backend Setup
-
-1. Navigate to backend directory:
 ```bash
-cd backend
-```
-
-2. Install dependencies:
-```bash
+# Install frontend dependencies
 npm install
-```
 
-3. Create `.env` file (already provided with defaults):
-```
-MONGODB_URI=mongodb://localhost:27017/wtwr
-JWT_SECRET=your_jwt_secret_key_change_in_production
-PORT=3000
-NODE_ENV=development
-```
+# Install backend dependencies
+cd backend && npm install
 
-4. Start the backend server:
-```bash
-npm run dev
-```
+# Start backend (port 3001)
+node backend/server.js
 
-The backend will run on `http://localhost:3000`
-
-### Frontend Setup
-
-1. Navigate to frontend directory:
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create `.env` file:
-```
-REACT_APP_API=http://localhost:3000/api
-```
-
-4. Start the frontend development server:
-```bash
+# Start frontend (port 3000)
 npm start
 ```
 
-The frontend will run on `http://localhost:3001`
-
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/signup` - Register a new user
-- `POST /api/auth/signin` - Login user
-- `GET /api/users/me` - Get current user (requires Bearer token)
-- `PATCH /api/users/me` - Update user profile (requires Bearer token)
-
-### Clothing
-- `GET /api/clothing` - Get all clothing items
-- `POST /api/clothing` - Create new clothing item (requires Bearer token)
-- `POST /api/clothing/like` - Like a clothing item (requires Bearer token)
-- `POST /api/clothing/unlike` - Unlike a clothing item (requires Bearer token)
-- `DELETE /api/clothing/:id` - Delete clothing item (requires Bearer token)
-
-## 🎯 Usage
-
-1. **Register**: Click "Register" in the header and fill in your details
-2. **Login**: Click "Sign In" and enter your credentials
-3. **Browse Clothing**: View all available clothing items on the home page
-4. **Like Items**: Click the heart icon to save items to your favorites
-5. **Edit Profile**: Click "Profile" in the header to edit your information
-6. **Sign Out**: Click "Sign Out" button to logout
-
-## 🔐 Authentication Flow
-
-1. User registers or logs in
-2. Backend generates JWT token
-3. Token is stored in localStorage
-4. Token is sent with every authenticated request in Authorization header
-5. Backend verifies token and grants access to protected resources
-6. On app load, token is verified and user is automatically logged in if valid
-
-## 📝 Component Details
-
-### Header Component
-- Displays WTWR logo
-- Shows user info when logged in (avatar, name)
-- Login/Register buttons when logged out
-- Sign Out button when logged in
-- Navigation to Profile page
-
-### Main Component
-- Displays weather guide with 4 weather types
-- Shows grid of all clothing items
-- Each item card displays image, name, weather tags, and like count
-- Like button available for logged-in users
-
-### Profile Component
-- Shows user information (name, email, avatar)
-- Edit button to modify profile
-- Form for updating name and avatar
-- Validation and error handling
-
-### ItemCard Component
-- Displays clothing item image
-- Shows item name and weather tags
-- Like button with heart icon
-- Like count display
-- Responsive hover effects
-
-## 🔄 State Management
-
-### App.jsx State
-- `isLoggedIn` - Boolean indicating if user is authenticated
-- `currentUser` - Current user object with _id, name, email, avatar
-- `clothingItems` - Array of all clothing items
-- `showRegisterModal` - Boolean for register modal visibility
-- `showLoginModal` - Boolean for login modal visibility
-- `loading` - Boolean for initial token verification
-
-### Context
-- `CurrentUserContext` - Provides currentUser and isLoggedIn to all components
-
-## 🛡️ Security Features
-
-- Passwords hashed with bcryptjs before storage
-- JWT tokens expire after 7 days
-- All API requests (except register/login) require valid JWT token
-- Bearer token authentication in Authorization header
-- CORS enabled for frontend-backend communication
-- Protected routes redirect unauthenticated users to home
-
-## 🎨 Styling
-
-- Modern, clean UI with blue accent color (#007bff)
-- Responsive design using CSS Grid and Flexbox
-- Mobile-first approach with media queries
-- Smooth transitions and hover effects
-- Professional color scheme (white, light gray, blue)
-
-## 📱 Responsive Breakpoints
-
-- Desktop: Full layout with all features
-- Tablet (768px): Adjusted spacing and grid
-- Mobile (< 768px): Single column layout, hidden user name in header
-
-## 🚀 Deployment
-
-### Frontend (Netlify)
-1. Build the project: `npm run build`
-2. Deploy the `build` folder to Netlify
-3. Set environment variable: `REACT_APP_API=<backend-url>`
-
-### Backend (Heroku/Railway)
-1. Set environment variables on hosting platform
-2. Deploy using Git or CLI
-3. Ensure MongoDB connection string is set
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Error
-- Ensure MongoDB is running locally or connection string is correct
-- Check MONGODB_URI in .env file
-
-### Token Not Persisting
-- Check if localStorage is enabled in browser
-- Verify JWT_SECRET is set in backend .env
-
-### CORS Errors
-- Ensure backend CORS is configured correctly
-- Check REACT_APP_API environment variable
-
-### Login/Register Not Working
-- Verify backend is running on correct port
-- Check network tab in browser DevTools
-- Ensure email is not already registered
-
-## 📚 Future Enhancements
-
-- Add weather API integration for real-time weather
-- Implement clothing categories and filters
-- Add image upload functionality
-- Create outfit combinations
-- Add social features (follow users, share outfits)
-- Implement search and advanced filtering
-- Add dark mode toggle
-- Create mobile app with React Native
-
-## 📄 License
-
-ISC
-
-## 👤 Author
-
-Created as part of Project 14 - WTWR Application
-
----
-
-**Happy coding! 🎉**
+Set `REACT_APP_API=http://localhost:3001` in a `.env` file for local development.
