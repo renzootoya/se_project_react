@@ -15,3 +15,6 @@ dist/
 .env.production
 .claude/
 .DS_Store
+
+error.log
+request.log
