@@ -55,7 +55,7 @@ function App() {
 
     getItems()
       .then((data) => {
-        setClothingItems(data.data || []);
+        setClothingItems(Array.isArray(data) ? data : data.data || []);
       })
       .catch((err) => console.error('Error loading items:', err));
   }, []);
@@ -86,8 +86,9 @@ function App() {
     const token = localStorage.getItem('jwt');
     return createItem(token, name, imageUrl, weather)
       .then((response) => {
-        if (response.data) {
-          setClothingItems((items) => [response.data, ...items]);
+        const item = response.data || response;
+        if (item._id) {
+          setClothingItems((items) => [item, ...items]);
           closeActiveModal();
         }
       })
@@ -110,9 +111,10 @@ function App() {
     const endpoint = isLiked ? removeCardLike : addCardLike;
     return endpoint(token, itemId)
       .then((response) => {
-        if (response.data) {
+        const updated = response.data || response;
+        if (updated._id) {
           setClothingItems((items) =>
-            items.map((item) => (item._id === itemId ? response.data : item))
+            items.map((item) => (item._id === itemId ? updated : item))
           );
         }
       })
