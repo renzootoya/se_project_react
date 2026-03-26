@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signup } from '../utils/auth';
+import { signup, signin } from '../utils/auth';
 import ModalWithForm from './ModalWithForm';
 
 const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
@@ -22,12 +22,20 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
     setLoading(true);
     signup(name, avatar, email, password)
       .then((response) => {
-        if (response.token && response.user) {
+        if (response._id) {
+          return signin(email, password);
+        }
+        setError(response.message || 'Registration failed. Please try again.');
+        return null;
+      })
+      .then((response) => {
+        if (!response) return;
+        if (response.token) {
           localStorage.setItem('jwt', response.token);
           resetForm();
-          onSubmit(response.user);
+          onSubmit({ name, avatar, email });
         } else {
-          setError(response.message || 'Registration failed. Please try again.');
+          setError(response.message || 'Login failed after registration.');
         }
       })
       .catch(() => {
