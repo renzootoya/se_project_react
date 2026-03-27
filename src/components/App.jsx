@@ -36,8 +36,8 @@ function App() {
     if (token) {
       checkToken(token)
         .then((data) => {
-          if (data.user) {
-            setCurrentUser(data.user);
+          if (data._id) {
+            setCurrentUser(data);
             setIsLoggedIn(true);
           } else {
             localStorage.removeItem('jwt');

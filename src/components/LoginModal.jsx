@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signin } from '../utils/auth';
+import { signin, checkToken } from '../utils/auth';
 import ModalWithForm from './ModalWithForm';
 
 const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
@@ -20,13 +20,17 @@ const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
     setLoading(true);
     signin(email, password)
       .then((response) => {
-        if (response.token && response.user) {
+        if (response.token) {
           localStorage.setItem('jwt', response.token);
-          resetForm();
-          onSubmit(response.user);
-        } else {
-          setError(response.message || 'Login failed. Please try again.');
+          return checkToken(response.token);
         }
+        setError(response.message || 'Login failed. Please try again.');
+        return null;
+      })
+      .then((userData) => {
+        if (!userData) return;
+        resetForm();
+        onSubmit(userData);
       })
       .catch(() => {
         setError('Network error. Please check your connection and try again.');
