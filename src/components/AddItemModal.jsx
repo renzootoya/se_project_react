@@ -20,7 +20,7 @@ const AddItemModal = ({ isOpen, onClose, onAddItem }) => {
     }
 
     setLoading(true);
-    onAddItem({ name, imageUrl, weather: [weather] })
+    onAddItem({ name, imageUrl, weather: weather.toLowerCase() })
       .then(() => {
         resetForm();
         onClose();

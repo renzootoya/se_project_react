@@ -69,7 +69,7 @@ const ItemCard = ({ item, isLoggedIn, onCardLike, onDelete }) => {
           <h3>{item.name}</h3>
           {item.weather && (
             <div className="weather-tags">
-              {item.weather.map((w) => (
+              {(Array.isArray(item.weather) ? item.weather : [item.weather]).map((w) => (
                 <span key={w} className="weather-tag">
                   {w}
                 </span>

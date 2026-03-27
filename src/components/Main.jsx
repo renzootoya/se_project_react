@@ -5,9 +5,10 @@ import './Main.css';
 
 const Main = ({ isLoggedIn, clothingItems, onCardLike, weatherData, isCelsius }) => {
   const filteredItems = weatherData?.type
-    ? clothingItems.filter(
-        (item) => Array.isArray(item.weather) && item.weather.includes(weatherData.type)
-      )
+    ? clothingItems.filter((item) => {
+        const weatherArr = Array.isArray(item.weather) ? item.weather : [item.weather];
+        return weatherArr.map((w) => w.toLowerCase()).includes(weatherData.type.toLowerCase());
+      })
     : clothingItems;
 
   return (
