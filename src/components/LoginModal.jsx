@@ -22,6 +22,10 @@ const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
       .then((response) => {
         if (response.token) {
           localStorage.setItem('jwt', response.token);
+          // If signin returns user directly, use it; otherwise fetch from /users/me
+          if (response.user) {
+            return Promise.resolve({ user: response.user });
+          }
           return checkToken(response.token);
         }
         setError(response.message || 'Login failed. Please try again.');
@@ -30,7 +34,7 @@ const LoginModal = ({ onClose, onSubmit, isOpen, onSwitchToRegister }) => {
       .then((userData) => {
         if (!userData) return;
         resetForm();
-        onSubmit(userData);
+        onSubmit(userData.user || userData);
       })
       .catch(() => {
         setError('Network error. Please check your connection and try again.');

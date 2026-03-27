@@ -73,7 +73,7 @@ const ItemModal = ({ isOpen, onClose, item, onDelete, onLike }) => {
         <div className="item-modal__info">
           <div className="item-modal__meta">
             <span className="item-modal__weather-label">Weather:</span>
-            {item.weather && item.weather.map((w) => (
+            {item.weather && (Array.isArray(item.weather) ? item.weather : [item.weather]).map((w) => (
               <span key={w} className="item-modal__weather-tag">{w}</span>
             ))}
           </div>

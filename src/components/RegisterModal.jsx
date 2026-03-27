@@ -23,7 +23,13 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
     const avatarUrl = avatar.trim() || 'https://i.pravatar.cc/150';
     signup(name, avatarUrl, email, password)
       .then((response) => {
-        if (response._id) {
+        // Backend may return {token, user} directly on signup, or just {_id,...}
+        if (response.token && (response.user || response._id)) {
+          localStorage.setItem('jwt', response.token);
+          const user = response.user || response;
+          return Promise.resolve({ _resolvedUser: user });
+        }
+        if (response._id || (response.user && response.user._id)) {
           return signin(email, password);
         }
         setError(response.message || 'Registration failed. Please try again.');
@@ -32,8 +38,16 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
       })
       .then((response) => {
         if (!response) return null;
+        // If we already resolved the user directly from signup
+        if (response._resolvedUser) {
+          return Promise.resolve({ _resolvedUser: response._resolvedUser });
+        }
         if (response.token) {
           localStorage.setItem('jwt', response.token);
+          // signin also returns {token, user}
+          if (response.user) {
+            return Promise.resolve({ _resolvedUser: response.user });
+          }
           return checkToken(response.token);
         }
         setError(response.message || 'Login failed after registration.');
@@ -41,8 +55,10 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
       })
       .then((userData) => {
         if (!userData) return;
+        const user = userData._resolvedUser || userData.user || userData;
+        if (!user._id) return;
         resetForm();
-        onSubmit(userData);
+        onSubmit(user);
       })
       .catch(() => {
         setError('Network error. Please check your connection and try again.');
