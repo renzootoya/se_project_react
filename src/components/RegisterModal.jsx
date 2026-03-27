@@ -20,12 +20,14 @@ const RegisterModal = ({ onClose, onSubmit, isOpen, onSwitchToLogin }) => {
     }
 
     setLoading(true);
-    signup(name, avatar, email, password)
+    const avatarUrl = avatar.trim() || 'https://i.pravatar.cc/150';
+    signup(name, avatarUrl, email, password)
       .then((response) => {
         if (response._id) {
           return signin(email, password);
         }
         setError(response.message || 'Registration failed. Please try again.');
+        setLoading(false);
         return null;
       })
       .then((response) => {
